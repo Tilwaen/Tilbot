@@ -17,7 +17,8 @@ exports.conf = {
   enabled: false,
   guildOnly: false,
   aliases: [],
-  permLevel: "r/flairwars moderator"
+  permLevel: "Oil",
+  channelPerms: "All"
 };
 
 exports.help = {

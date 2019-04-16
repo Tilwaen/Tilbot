@@ -46,7 +46,8 @@ exports.conf = {
   enabled: false,
   guildOnly: true,
   aliases: [],
-  permLevel: "User"
+  permLevel: "User",
+  channelPerms: "Fun"
 };
 
 exports.help = {

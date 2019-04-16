@@ -25,6 +25,24 @@ module.exports = (client) => {
     return permlvl;
   };
 
+  // Valid for the Megaserver only - possibly migrate to the Guild settings below later
+
+  client.channelPerm = message => {
+    let permlvl = 0;
+
+    const permOrder = client.config.channelPerms.slice(0).sort((p, c) => p.level < c.level ? 1 : -1);
+
+    while (permOrder.length) {
+      const currentLevel = permOrder.shift();
+      if (message.guild && currentLevel.guildOnly) continue;
+      if (currentLevel.check(message)) {
+        permlvl = currentLevel.level;
+        break;
+      }
+    }
+    return permlvl;
+  };
+
   /*
   GUILD SETTINGS FUNCTION
 

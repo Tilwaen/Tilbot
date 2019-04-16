@@ -33,6 +33,7 @@ module.exports = async (client, message) => {
 
   // Get the user or member's permission level from the elevation
   const level = client.permlevel(message);
+  const channelPermLevel = client.channelPerm(message);
 
   // Check whether the command, or alias, exist in the collections defined
   // in app.js.
@@ -40,10 +41,6 @@ module.exports = async (client, message) => {
   // using this const varName = thing OR otherthign; is a pretty efficient
   // and clean way to grab one of 2 values!
   if (!cmd) return;
-
-  /*if (!cmd.conf.enabled) {
-      return;
-  }*/
 
   // Some commands may not be useable in DMs. This check prevents those commands from running
   // and return a friendly error message.
@@ -55,6 +52,16 @@ module.exports = async (client, message) => {
       return message.channel.send(`You do not have permission to use this command.
   Your permission level is ${level} (${client.config.permLevels.find(l => l.level === level).name})
   This command requires level ${client.levelCache[cmd.conf.permLevel]} (${cmd.conf.permLevel})`);
+    } else {
+      return;
+    }
+  }
+
+  console.log(`Channel perm level: ${channelPermLevel}; level of the command: ${cmd.conf.channelPerms} = ${client.channelPermLevelCache[cmd.conf.channelPerms]}`)
+
+  if (channelPermLevel < client.channelPermLevelCache[cmd.conf.channelPerms]) {
+    if (settings.systemNotice === "true") {
+      return message.channel.send(`This command is disabled in this channel.`);
     } else {
       return;
     }

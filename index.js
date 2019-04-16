@@ -60,7 +60,7 @@ const init = async () => {
     client.logger.log(`Loading Event: ${eventName}`);
     const event = require(`./events/${file}`);
     // Bind the client to any event, before the existing arguments
-    // provided by the discord.js event. 
+    // provided by the discord.js event.
     // This line is awesome by the way. Just sayin'.
     client.on(eventName, event.bind(null, client));
   });
@@ -70,6 +70,12 @@ const init = async () => {
   for (let i = 0; i < client.config.permLevels.length; i++) {
     const thisLevel = client.config.permLevels[i];
     client.levelCache[thisLevel.name] = thisLevel.level;
+  }
+
+  client.channelPermLevelCache = {};
+  for (let i = 0; i < client.config.channelPerms.length; i++) {
+    const thisLevel = client.config.channelPerms[i];
+    client.channelPermLevelCache[thisLevel.name] = thisLevel.level;
   }
 
   // Here we login the client.

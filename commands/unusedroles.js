@@ -8,7 +8,8 @@ exports.conf = {
   enabled: true,
   guildOnly: true,
   aliases: [],
-  permLevel: "Mini Mod (50% oil)"
+  permLevel: "Minimod",
+  channelPerms: "Fun"
 };
 
 exports.help = {
