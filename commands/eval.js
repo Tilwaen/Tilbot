@@ -24,9 +24,9 @@ exports.conf = {
   permLevel: "Bot Owner"
 };
 
-exports.help = {
+/*exports.help = {
   name: "eval",
   category: "System",
   description: "Evaluates arbitrary javascript.",
   usage: "eval [...code]"
-};
+};*/
