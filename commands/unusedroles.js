@@ -6,7 +6,7 @@ exports.run = async (client, message, args, level) => {
 
 exports.conf = {
   enabled: true,
-  guildOnly: false,
+  guildOnly: true,
   aliases: [],
   permLevel: "Mini Mod (50% oil)"
 };
@@ -17,17 +17,3 @@ exports.help = {
   description: "Lists roles which aren't used by anyone.",
   usage: "unusedroles"
 };
-
-/*exports.conf = {
-  enabled: true,
-  guildOnly: false,
-  aliases: [],
-  permLevel: "r/flairwars moderator"
-};
-
-exports.help = {
-  name: "unusedroles",
-  category: "Moderating",
-  description: "Lists roles which aren't used by anyone.",
-  usage: "unusedroles"
-};*/

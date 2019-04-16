@@ -13,7 +13,7 @@ exports.run = async (client, message, args, level) => {
 
 };
 
-/*exports.conf = {
+exports.conf = {
   enabled: false,
   guildOnly: false,
   aliases: [],
@@ -25,4 +25,4 @@ exports.help = {
   category: "Miscelaneous",
   description: "As if nothing happened",
   usage: "recovernicknames"
-};*/
+};

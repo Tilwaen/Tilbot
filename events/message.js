@@ -41,6 +41,10 @@ module.exports = async (client, message) => {
   // and clean way to grab one of 2 values!
   if (!cmd) return;
 
+  /*if (!cmd.conf.enabled) {
+      return;
+  }*/
+
   // Some commands may not be useable in DMs. This check prevents those commands from running
   // and return a friendly error message.
   if (cmd && !message.guild && cmd.conf.guildOnly)
@@ -59,7 +63,7 @@ module.exports = async (client, message) => {
   // To simplify message arguments, the author's level is now put on level (not member so it is supported in DMs)
   // The "level" command module argument will be deprecated in the future.
   message.author.permLevel = level;
-  
+
   message.flags = [];
   while (args[0] && args[0][0] === "-") {
     message.flags.push(args.shift().slice(1));

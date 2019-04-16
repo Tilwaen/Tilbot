@@ -4,7 +4,6 @@ exports.run = async (client, message, args, level) => {
     let runInLiveMode = args[1] === "kick";
     console.log("runInLiveMode: " + runInLiveMode);
 
-    //var dictionary = {};
     var map = new Map();
 
     let channels = message.guild.channels.filter(c => c.type === "text").array();
@@ -17,21 +16,6 @@ exports.run = async (client, message, args, level) => {
         /*msg = */await msg.edit(`${msg.content}\n#${channel.name}`).catch(console.error);
         await processChannel(channel, map, inputDate);
     }
-    //await msg.edit(`${msg.content}\n\nDone!`).catch(console.error);
-
-    /*const loopChannels = async (messageToBeEdited) => {
-        for (const channel of channels) {
-            console.log(`Processing channel #${channel.name}`);
-            messageToBeEdited = await messageToBeEdited.edit(`${messageToBeEdited.content}\n#${channel.name}`);
-            await processChannel(channel, map, inputDate);
-        }
-        //await messageToBeEdited.edit(`${messageToBeEdited.content}\n\nDone!`);
-        return messageToBeEdited;
-    };
-    const messageToBeEdited = await loopChannels(msg);
-    //msg.edit(`${msg.content}\n\nDone!`);
-    console.log("Message: " + messageToBeEdited);
-    await messageToBeEdited.edit(`${messageToBeEdited.content}\n\nDone!`);*/
 
     console.log("Number of users found in the channels: " + map.size);
 
@@ -63,7 +47,6 @@ exports.run = async (client, message, args, level) => {
     if (usersNotFoundButNotKickable.size > 0) {
         const msg4 = await message.channel.send(`**Users that aren't active but can't be kicked by this bot:**\n${stringUsersNotFoundButNotKickable}`);
     }
-    //const msg4 = await message.channel.send(`**Users that were found active:**\n${stringUsersFound}`);
 
     if (runInLiveMode) {
         console.log("Running in live mode, kicking users.");
@@ -122,7 +105,7 @@ async function sendTrimmedMessage(channel, content) {
 
 exports.conf = {
   enabled: true,
-  guildOnly: false,
+  guildOnly: true,
   aliases: [],
   permLevel: "r/flairwars moderator"
 };

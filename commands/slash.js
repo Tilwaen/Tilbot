@@ -1,12 +1,4 @@
 exports.run = async (client, message, args, level) => {
-    // Bot testing server
-    //const role1ID = "563655980894912512";
-    //const role2ID = "563656014814117888";
-
-    // Til's sanctuary
-    //const role1ID = "563659233577664516";
-    //const role2ID = "563659258160349184";
-
     // Megaserver
     const role1ID = "563611117302185984";
     const role2ID = "563611176370569216";
@@ -36,7 +28,6 @@ exports.run = async (client, message, args, level) => {
 
         await message.member.addRole(role).catch(console.error);
 
-        //const nickname = message.member.nickname.substring(3);
         const nickname = message.member.nickname.split('/u/').slice(1);
         const newNickname = (coinflip === 0) ? 'u/' + nickname : '\\u/' + nickname;
         await message.member.setNickname(newNickname).catch(console.error);
@@ -51,9 +42,9 @@ exports.run = async (client, message, args, level) => {
     }
 };
 
-/*exports.conf = {
+exports.conf = {
   enabled: false,
-  guildOnly: false,
+  guildOnly: true,
   aliases: [],
   permLevel: "User"
 };
@@ -64,4 +55,3 @@ exports.help = {
   description: "Get assigned a fancy role!",
   usage: "slash"
 };
-*/

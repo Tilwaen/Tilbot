@@ -39,7 +39,7 @@ async function sendTrimmedMessage(channel, content) {
 
 exports.conf = {
   enabled: true,
-  guildOnly: false,
+  guildOnly: true,
   aliases: [],
   permLevel: "r/flairwars moderator"
 };
