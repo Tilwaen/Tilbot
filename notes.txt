@@ -1,0 +1,5 @@
+heroku auth:token
+git add -A
+git commit -m "message"
+git push heroku secret:master
+login: tilwaenk@gmail.com, heroku token

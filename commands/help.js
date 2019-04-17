@@ -12,11 +12,6 @@ exports.run = (client, message, args, level) => {
     // Filter all commands by which are available for the user's level, using the <Collection>.filter() method.
     const myCommands = message.guild ? client.commands.filter(cmd => client.levelCache[cmd.conf.permLevel] <= level) : client.commands.filter(cmd => client.levelCache[cmd.conf.permLevel] <= level &&  cmd.conf.guildOnly !== true);
 
-    console.log(`help command: level argument passed: ${level}, permLevels:`);
-    client.commands.forEach(cmd => {
-        console.log(`name: ${cmd.name}, level: ${client.levelCache[cmd.conf.permLevel]}`);
-    });
-
     // Here we have to get the command names only, and we use that array to get the longest name.
     // This make the help commands "aligned" in the output.
     const commandNames = myCommands.keyArray();
