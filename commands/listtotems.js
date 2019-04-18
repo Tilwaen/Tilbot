@@ -10,7 +10,8 @@ exports.run = async (client, message, args, level) => {
         const totemString = colourTotems.size > 0 ? colourTotems.map(member => (`<@${member.id}>`)).join('\n') : "none";
         colourString = `${colourString}**${colour} totems:**\n${totemString}\n`;
     });
-    message.channel.send(colourString);
+    await message.channel.send(colourString);
+    message.delete().catch(console.error);
 };
 
 exports.conf = {
