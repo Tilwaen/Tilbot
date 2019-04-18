@@ -1,9 +1,6 @@
 exports.run = async (client, message, args, level) => {
     let totemBots = await message.guild.roles.find(role => role.name === "Totem").members.filter(member => member.user.bot);
 
-    console.log("Totem bots:");
-    console.log(totemBots.map(member => member.user.username).join('\n'));
-
     const colours = ["Red", "Orange", "Yellow", "Green", "Blue", "Purple"];
 
     let colourString = "\`\`\`yaml\nCurrent state of the totems\n\`\`\`";
