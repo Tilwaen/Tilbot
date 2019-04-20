@@ -16,6 +16,7 @@ exports.run = async (client, message, args, level, r) => {
 
     switch (args[0].toLowerCase()) {
         case "red": colourSubreddit = "DSRRed"; break;
+        case "pink":
         case "orange": colourSubreddit = "TheOrangeArmyHQ"; break;
         case "yellow": colourSubreddit = "YellowOnlineUnion"; break;
         case "green": colourSubreddit = "TheGreenArmy"; break;
