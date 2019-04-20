@@ -2,7 +2,7 @@ const fetch = require("node-fetch");
 const { RichEmbed } = require('discord.js');
 
 module.exports = {
-    getImage: async function(subredditNameArray) {
+    getSubredditImage: async function(subredditNameArray) {
         const subredditChoice = getRandomEntry(subredditNameArray);
         const data = await fetch(`https://www.reddit.com/r/${subredditChoice}.json`).catch(console.error);
         const json = await data.json();
@@ -10,6 +10,12 @@ module.exports = {
         const allowedPosts = posts.filter(post => !post.data.over_18 && post.data.post_hint === 'image')
         const randomPost = getRandomEntry(allowedPosts);
         return randomPost.data.url;
+    },
+
+    getImageCatAPI: async function(url) {
+        const data = await fetch(url).catch(console.error);
+        const json = await data.json();
+        return json[0].url;
     },
 
     sendImageEmbed: async function(channel, url) {

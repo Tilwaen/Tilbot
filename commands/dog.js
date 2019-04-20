@@ -1,9 +1,7 @@
 const imageReply = require('../functions/imagereply.js');
 
-const subreddits = ["eyebleach", "aww"];
-
 exports.run = async (client, message, args, level) => {
-    const imageUrl = await imageReply.getSubredditImage(subreddits);
+    const imageUrl = await imageReply.getImageCatAPI(`https://api.thedogapi.com/v1/images/search`);
     await imageReply.sendImageEmbed(message.channel, imageUrl);
 };
 
@@ -12,12 +10,12 @@ exports.conf = {
   guildOnly: true,
   aliases: [],
   permLevel: "User",
-  channelPerms: "Fun"
+  channelPerms: "All"
 };
 
 exports.help = {
-  name: "eyebleach",
+  name: "dog",
   category: "Images",
-  description: "Posts a random eyebleach image from r/eyebleach or r/aww",
-  usage: "eyebleach"
+  description: "Posts a random image of a dog",
+  usage: "dog"
 };
