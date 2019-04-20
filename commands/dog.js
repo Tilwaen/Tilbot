@@ -10,7 +10,7 @@ exports.conf = {
   guildOnly: true,
   aliases: [],
   permLevel: "User",
-  channelPerms: "All",
+  channelPerms: "Fun",
   userCooldown: false,
   globalCooldown: false,
   cooldownDuration: 0
