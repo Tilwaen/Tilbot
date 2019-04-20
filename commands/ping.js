@@ -8,7 +8,10 @@ exports.conf = {
   guildOnly: false,
   aliases: [],
   permLevel: "User",
-  channelPerms: "Fun"
+  channelPerms: "Fun",
+  userCooldown: false,
+  globalCooldown: false,
+  cooldownDuration: 0
 };
 
 exports.help = {

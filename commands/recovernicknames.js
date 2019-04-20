@@ -18,7 +18,10 @@ exports.conf = {
   guildOnly: false,
   aliases: [],
   permLevel: "Oil",
-  channelPerms: "All"
+  channelPerms: "All",
+  userCooldown: false,
+  globalCooldown: false,
+  cooldownDuration: 0
 };
 
 exports.help = {

@@ -17,14 +17,17 @@ exports.run = async (client, message, args, level) => {
 exports.conf = {
   enabled: true,
   guildOnly: true,
-  aliases: [],
+  aliases: ["totems"],
   permLevel: "User",
-  channelPerms: "All"
+  channelPerms: "All",
+  userCooldown: false,
+  globalCooldown: false,
+  cooldownDuration: 0
 };
 
 exports.help = {
   name: "listtotems",
-  category: "Miscelaneous",
+  category: "Flairwars",
   description: "Displays the list of totems and who owns them",
   usage: "listtotems"
 };

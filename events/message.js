@@ -2,7 +2,9 @@
 // Note that due to the binding of client to every event, every event
 // goes `client, other, args` when this function is run.
 
-module.exports = async (client, message) => {
+const Discord = require("discord.js");
+
+module.exports = async (client, r, userCooldowns, globalCooldowns, message) => {
   // It's good practice to ignore other bots. This also makes your bot ignore itself
   // and not get into a spam loop (we call that "botception").
   if (message.author.bot) return;
@@ -57,8 +59,6 @@ module.exports = async (client, message) => {
     }
   }
 
-  console.log(`Channel perm level: ${channelPermLevel}; level of the command: ${cmd.conf.channelPerms} = ${client.channelPermLevelCache[cmd.conf.channelPerms]}`)
-
   if (channelPermLevel < client.channelPermLevelCache[cmd.conf.channelPerms]) {
     if (settings.systemNotice === "true") {
       return message.channel.send(`This command is disabled in this channel.`);
@@ -75,7 +75,49 @@ module.exports = async (client, message) => {
   while (args[0] && args[0][0] === "-") {
     message.flags.push(args.shift().slice(1));
   }
+
+    // Command specific cooldown
+    if (cmd.conf.userCooldown) {
+        if (!userCooldowns.has(command)) {
+            userCooldowns.set(command, new Discord.Collection());
+        }
+
+        const now = Date.now();
+        const timestamps = userCooldowns.get(command);
+        const cooldownAmount = (cmd.conf.cooldownDuration) * 1000;
+
+        if (timestamps.has(message.author.id)) {
+            const expirationTime = timestamps.get(message.author.id) + cooldownAmount;
+
+            if (now < expirationTime) {
+                const timeLeft = (expirationTime - now) / 1000;
+                return message.reply(`please wait ${timeLeft.toFixed(1)} more second(s) before reusing the \`${command}\` command.`);
+            }
+        }
+
+        timestamps.set(message.author.id, now);
+        setTimeout(() => timestamps.delete(message.author.id), cooldownAmount);
+    }
+
+    if (cmd.conf.globalCooldown) {
+        const now = Date.now();
+        const cooldownAmount = (cmd.conf.cooldownDuration) * 1000;
+
+        if (!globalCooldowns.has(command)) {
+            globalCooldowns.set(command, now);
+        } else {
+            const timestamp = globalCooldowns.get(command);
+            const expirationTime = timestamp + cooldownAmount;
+            if (now < expirationTime) {
+                const timeLeft = (expirationTime - now) / 1000;
+                return message.reply(`please wait ${timeLeft.toFixed(1)} more second(s) before reusing the \`${command}\` command.`);
+            }
+        }
+
+        setTimeout(() => globalCooldowns.delete(command), cooldownAmount);
+    }
+
   // If the command exists, **AND** the user has permission, run it.
   client.logger.cmd(`[CMD] ${client.config.permLevels.find(l => l.level === level).name} ${message.author.username} (${message.author.id}) ran command ${cmd.help.name}`);
-  cmd.run(client, message, args, level);
+  cmd.run(client, message, args, level, r);
 };

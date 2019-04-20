@@ -114,7 +114,7 @@ module.exports = (client) => {
       const props = require(`../commands/${commandName}`);
 
       if (!props.conf.enabled) {
-          return `Command not ${commandName} enabled`;
+          return `Command ${commandName} not enabled`;
       }
 
       if (props.init) {

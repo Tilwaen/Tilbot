@@ -2,8 +2,8 @@ const imageReply = require('../functions/imagereply.js');
 
 const subreddits = ["eyebleach", "aww"];
 
-exports.run = async (client, message, args, level) => {
-    const imageUrl = await imageReply.getSubredditImage(subreddits);
+exports.run = async (client, message, args, level, r) => {
+    const imageUrl = await imageReply.getSubredditImage(r, subreddits);
     await imageReply.sendImageEmbed(message.channel, imageUrl);
 };
 
@@ -12,7 +12,10 @@ exports.conf = {
   guildOnly: true,
   aliases: [],
   permLevel: "User",
-  channelPerms: "Fun"
+  channelPerms: "Fun",
+  userCooldown: false,
+  globalCooldown: false,
+  cooldownDuration: 0
 };
 
 exports.help = {
