@@ -17,7 +17,7 @@ exports.run = async (client, message, args, level) => {
 exports.conf = {
   enabled: true,
   guildOnly: true,
-  aliases: ["totems"],
+  aliases: ["totems", "totemlist"],
   permLevel: "User",
   channelPerms: "All",
   userCooldown: false,
