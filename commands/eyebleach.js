@@ -1,6 +1,6 @@
 const imageReply = require('../functions/imagereply.js');
 
-const subreddits = ["eyebleach", "aww"];
+const subreddits = ["eyebleach", "aww", "mlem"];
 
 exports.run = async (client, message, args, level, r) => {
     const imageUrl = await imageReply.getSubredditImage(r, subreddits);
@@ -21,6 +21,6 @@ exports.conf = {
 exports.help = {
   name: "eyebleach",
   category: "Images",
-  description: "Posts a random eyebleach image from r/eyebleach or r/aww",
+  description: "Posts a random eyebleach image from r/eyebleach, r/aww or r/mlem",
   usage: "eyebleach"
 };
