@@ -45,7 +45,7 @@ module.exports = {
         do {
             const post = await r.getSubreddit(subredditChoice).getRandomSubmission();
             const allowed = post.post_hint === 'image' && !post.over_18;
-            if (allowed) return { title: post.data.title, author: post.data.author, url: post.data.url };
+            if (allowed) return { title: post.title, author: post.author, url: post.url };
             numberOfTries++;
         } while (numberOfTries < limit);
 
