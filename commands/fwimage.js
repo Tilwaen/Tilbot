@@ -3,8 +3,8 @@ const imageReply = require('../functions/imagereply.js');
 const subreddits = ["flairwars"];
 
 exports.run = async (client, message, args, level, r) => {
-    const imageUrl = await imageReply.getSubredditImage(r, subreddits);
-    await imageReply.sendImageEmbed(message.channel, imageUrl);
+    const imagePost = await imageReply.getSubredditImagePost(r, subreddits);
+    await imageReply.sendImageEmbedWithAuthor(message.channel, imagePost.url, imagePost.author);
 };
 
 exports.conf = {
