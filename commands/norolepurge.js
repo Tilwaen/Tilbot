@@ -26,7 +26,7 @@ exports.run = async (client, message, args, level) => {
         await filteredMembers.forEach(function(member) {
             if (!member.kickable) return message.reply(`I cannot kick member ${member}`);
             console.log(`Kicking ${member}`);
-            member.kick();
+            member.kick("Purge of users with no role assigned");
         });
     } else {
         console.log("Running in test mode, no users were kicked.");
