@@ -8,6 +8,8 @@ config.json
 config.js
 data/
 test.js
+nbproject/
+.github/
 
 # Runtime data
 pids
