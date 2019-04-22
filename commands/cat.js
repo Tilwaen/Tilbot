@@ -1,6 +1,6 @@
 const imageReply = require('../functions/imagereply.js');
 
-exports.run = async (client, message, args, level) => {
+exports.run = async (client, message, args, level, r, unbClient) => {
     const imageUrl = await imageReply.getImageCatAPI(`http://thecatapi.com/api/images/get?format=json`);
     await imageReply.sendImageEmbed(message.channel, imageUrl);
 };

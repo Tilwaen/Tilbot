@@ -1,6 +1,6 @@
 const fetch = require("node-fetch");
 
-exports.run = async (client, message, args, level, r) => {
+exports.run = async (client, message, args, level, r, unbClient) => {
     if (args.length === 0) {
         await message.channel.send("Please specify a colour");
         return;

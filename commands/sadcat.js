@@ -2,7 +2,7 @@ const imageReply = require('../functions/imagereply.js');
 
 const subreddits = ["sadcats"];
 
-exports.run = async (client, message, args, level, r) => {
+exports.run = async (client, message, args, level, r, unbClient) => {
     const imageUrl = await imageReply.getSubredditImage(r, subreddits);
     await imageReply.sendImageEmbed(message.channel, imageUrl);
 };

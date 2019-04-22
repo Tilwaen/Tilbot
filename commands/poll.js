@@ -1,6 +1,6 @@
 const { RichEmbed } = require('discord.js');
 
-exports.run = async (client, message, args, level) => {
+exports.run = async (client, message, args, level, r, unbClient) => {
     if (message.content.indexOf("{") === -1) {
         await message.react("👍");
         await message.react("👎");

@@ -4,7 +4,7 @@
 
 const Discord = require("discord.js");
 
-module.exports = async (client, r, userCooldowns, globalCooldowns, message) => {
+module.exports = async (client, r, unbClient, userCooldowns, globalCooldowns, message) => {
   // It's good practice to ignore other bots. This also makes your bot ignore itself
   // and not get into a spam loop (we call that "botception").
   if (message.author.bot) return;
@@ -119,5 +119,5 @@ module.exports = async (client, r, userCooldowns, globalCooldowns, message) => {
 
   // If the command exists, **AND** the user has permission, run it.
   client.logger.cmd(`[CMD] ${client.config.permLevels.find(l => l.level === level).name} ${message.author.username} (${message.author.id}) ran command ${cmd.help.name}`);
-  cmd.run(client, message, args, level, r);
+  cmd.run(client, message, args, level, r, unbClient);
 };

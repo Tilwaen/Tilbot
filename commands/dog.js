@@ -1,6 +1,6 @@
 const imageReply = require('../functions/imagereply.js');
 
-exports.run = async (client, message, args, level) => {
+exports.run = async (client, message, args, level, r, unbClient) => {
     const imageUrl = await imageReply.getImageCatAPI(`https://api.thedogapi.com/v1/images/search`);
     await imageReply.sendImageEmbed(message.channel, imageUrl);
 };

@@ -1,15 +1,12 @@
-const { Client } = require('unb-api');
 const { RichEmbed } = require('discord.js');
 
-exports.run = async (client, message, args, level, r) => {
+exports.run = async (client, message, args, level, r, unbClient) => {
     const colours = ["Red", "Orange", "Yellow", "Green", "Blue", "Purple"];
     const colourRoles = colours.map(colour => message.guild.roles.find(role => role.name === colour));
     var colourBalance = new Map();
     const adminRoleID = message.guild.roles.find(role => role.name.toLowerCase() === client.config.defaultSettings.adminRole).id;
-
     const guildID = message.guild.id;
 
-    const unbClient = new Client(client.config.unbApiToken);
     var msg = await message.channel.send("Fetching data...");
     // User[]; user.user_id, user.cash
     const leaderboard = await unbClient.getGuildLeaderboard(guildID);

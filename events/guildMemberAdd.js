@@ -1,6 +1,6 @@
 // This event executes when a new member joins a server. Let's welcome them!
 
-module.exports = (client, r, userCooldowns, globalCooldowns, member) => {
+module.exports = (client, r, unbClient, userCooldowns, globalCooldowns, member) => {
   // Load the guild's settings
   const settings = client.getSettings(member.guild.id);
 

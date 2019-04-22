@@ -6,6 +6,7 @@ const { promisify } = require("util");
 const readdir = promisify(require("fs").readdir);
 const Enmap = require("enmap");
 const snoowrap = require('snoowrap');
+const { Client } = require('unb-api');
 
 const client = new Discord.Client();
 
@@ -44,6 +45,7 @@ const init = async () => {
         password: client.config.redditAuth.password
     });
 
+    const unbClient = new Client(client.config.unbApiToken);
 
   // Here we load **commands** into memory, as a collection, so they're accessible
   // here and everywhere else.
@@ -65,7 +67,7 @@ const init = async () => {
     // Bind the client to any event, before the existing arguments
     // provided by the discord.js event.
     // This line is awesome by the way. Just sayin'.
-    client.on(eventName, event.bind(null, client, r, userCooldowns, globalCooldowns));
+    client.on(eventName, event.bind(null, client, r, unbClient, userCooldowns, globalCooldowns));
   });
 
   // Generate a cache of client permissions for pretty perm names in commands.

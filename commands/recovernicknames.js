@@ -1,4 +1,4 @@
-exports.run = async (client, message, args, level) => {
+exports.run = async (client, message, args, level, r, unbClient) => {
     let botRole = message.guild.roles.find(role => role.name === "Tilbot");
     //let regex = /^(\\?u\/)/;
     let regex = /^((\\?u\/\/?)|(\|?u\|)|(\/u\\))/;
