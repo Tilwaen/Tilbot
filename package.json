@@ -24,6 +24,7 @@
     "moment": "^2.20.1",
     "moment-duration-format": "^2.2.0",
     "node-fetch": "^2.3.0",
-    "snoowrap": "^1.15.2"
+    "snoowrap": "^1.15.2",
+    "unb-api": "^1.0.5"
   }
 }
