@@ -1,5 +1,3 @@
-const fetch = require("node-fetch");
-
 exports.run = async (client, message, args, level, r, unbClient) => {
     if (args.length === 0) {
         await message.channel.send("Please specify a colour");
@@ -64,13 +62,6 @@ exports.run = async (client, message, args, level, r, unbClient) => {
         after = posts[posts.length - 1].name;
     }
 };
-
-/*async function getHotPage(subreddit) {
-    const data = await fetch(`https://www.reddit.com/r/${subreddit}/hot/.json?limit=25`).catch(console.error);
-    const json = await data.json();
-    console.log(json.data.children);
-    return json.data.children.filter(post => !post.data.stickied);
-}*/
 
 async function getHotPage(r, subreddit, after) {
     return await r.getSubreddit(subreddit).getHot({ limit: 25, after: after }).filter(post => !post.stickied);
