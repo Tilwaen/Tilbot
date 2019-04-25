@@ -91,10 +91,10 @@ exports.run = async (client, message, args, level, r, unbClient) => {
     const balance = [colourTotal, usersGoneBalance, moderatorsBalance, notColouredBalance];
     const total = balance.includes("Infinity") ? "Infinity" : balance.reduce((a, v) => a + v);
 
-    sendEmbed(msg, colourString, colourTotal, total, stringUsersGone, stringModerators, stringNotColoured);
+    sendShardEmbed(msg, colourString, colourTotal, total, stringUsersGone, stringModerators, stringNotColoured);
 };
 
-async function sendEmbed(msg, colourString, colourTotal, total, usersGone, mods, uncoloured) {
+async function sendShardEmbed(msg, colourString, colourTotal, total, usersGone, mods, uncoloured) {
     var embed = new RichEmbed()
         .setColor(0xC9DDFF)
         .addField("Shard count", colourString)
