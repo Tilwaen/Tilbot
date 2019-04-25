@@ -10,15 +10,16 @@ exports.run = async (client, message, args, level, r, unbClient) => {
     // Filters out the possible /u/ or u/ prefix, as well as an empty string after the split
     let username = args[0].split(prefixRegex).filter(Boolean)[0];
 
-    let redditUser = await r.getUser(username).fetch().catch(InvalidUsernameError => {
-        message.channel.send("This is not a valid Reddit account: https://www.reddit.com/u/" + username);
-        return;
-    });
+    var redditUser;
+    var userFlair;
 
-    let userFlair = await r.getSubreddit('flairwars').getUserFlair(username).catch(InvalidUsernameError => {
+    try {
+        redditUser = await r.getUser(username).fetch();
+        userFlair = await r.getSubreddit('flairwars').getUserFlair(username);
+    } catch (error) {
         message.channel.send("This is not a valid Reddit account: https://www.reddit.com/u/" + username);
         return;
-    });
+    };
 
     let flair = userFlair.flair_text ? userFlair.flair_text : 'None';
     let karma = redditUser.link_karma + redditUser.comment_karma;
@@ -58,7 +59,7 @@ exports.conf = {
   enabled: true,
   guildOnly: true,
   aliases: [],
-  permLevel: "Minimod",
+  permLevel: "User",
   channelPerms: "All",
   userCooldown: false,
   globalCooldown: false,
