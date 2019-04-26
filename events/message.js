@@ -4,7 +4,7 @@
 
 const Discord = require("discord.js");
 
-module.exports = async (client, r, unbClient, userCooldowns, globalCooldowns, message) => {
+module.exports = async (client, r, unbClient, userCooldowns, globalCooldowns, authReq, message) => {
   // It's good practice to ignore other bots. This also makes your bot ignore itself
   // and not get into a spam loop (we call that "botception").
   if (message.author.bot) return;
@@ -84,7 +84,7 @@ module.exports = async (client, r, unbClient, userCooldowns, globalCooldowns, me
 
         const now = Date.now();
         const timestamps = userCooldowns.get(command);
-        const cooldownAmount = (cmd.conf.cooldownDuration) * 1000;
+        const cooldownAmount = (cmd.conf.cooldownDuration) * 1000; // * 1000 because of ms
 
         if (timestamps.has(message.author.id)) {
             const expirationTime = timestamps.get(message.author.id) + cooldownAmount;
@@ -115,6 +115,14 @@ module.exports = async (client, r, unbClient, userCooldowns, globalCooldowns, me
         }
 
         setTimeout(() => globalCooldowns.delete(command), cooldownAmount);
+    }
+
+    // In case it's an authentication request, store the message info in a collection so that we can retrieve it later
+    if (cmd.help.name === 'auth') {
+        authReq.set(message.author.tag, message);
+
+        // The maximum duration for a temporary OAuth2 bearer token is 1 hour
+        setTimeout(() => authReq.delete(message.author.tag), 60 * 60 * 1000);
     }
 
   // If the command exists, **AND** the user has permission, run it.
