@@ -119,10 +119,10 @@ module.exports = async (client, r, unbClient, userCooldowns, globalCooldowns, au
 
     // In case it's an authentication request, store the message info in a collection so that we can retrieve it later
     if (cmd.help.name === 'auth') {
-        authReq.set(message.author.tag, message);
+        authReq.set(message.author.id, message);
 
         // The maximum duration for a temporary OAuth2 bearer token is 1 hour
-        setTimeout(() => authReq.delete(message.author.tag), 60 * 60 * 1000);
+        setTimeout(() => authReq.delete(message.author.id), 60 * 60 * 1000);
     }
 
   // If the command exists, **AND** the user has permission, run it.

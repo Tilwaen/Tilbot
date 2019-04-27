@@ -6,7 +6,7 @@ const axios = require('axios');
 const auth = require('../functions/authentication.js');
 
 module.exports = (app, client, r, authReq) => app.get('/', (req, res) => {
-  res.send("Snooping around, aren't you?");
+    res.send("Snooping around, aren't you?");
 });
 
 module.exports = (app, client, r, authReq) => app.get('/oauth/redirect', (req, res) => {
@@ -63,10 +63,6 @@ function getRedditUsernameAndAuthenticate(client, r, authReq, token, state) {
         if (response.data.error) {
             console.log(response.data.error);
         } else {
-            console.log("Success!");
-            //console.log(response);
-            console.log(response.data.name);
-
             auth.authSuccess(client, r, authReq, response, state);
         }
     });

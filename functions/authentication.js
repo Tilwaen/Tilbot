@@ -2,9 +2,9 @@ const { RichEmbed } = require('discord.js');
 
 module.exports = {
     authSuccess: async function (client, r, authReq, response, state) {
-        const tag = Buffer.from(state, 'base64').toString('ascii');
-        const message = authReq.get(tag);
-        authReq.delete(tag);
+        const userID = Buffer.from(state, 'base64').toString('ascii');
+        const message = authReq.get(userID);
+        authReq.delete(userID);
 
         if (!message) {
             // TODO: The user hasn't clicked the link for more than one hour
@@ -36,11 +36,15 @@ module.exports = {
         sendRedditUserEmbed(message.channel, discordUser, redditUsername, flair, karma, age);
     },
     authFailure: function (client, r, authReq, response, state) {
-        const tag = Buffer.from(state, 'base64').toString('ascii');
-        const message = authReq.get(tag);
-        authReq.delete(tag);
+        const userID = Buffer.from(state, 'base64').toString('ascii');
+        const message = authReq.get(userID);
+        authReq.delete(userID);
 
-        message.reply("The authentication wasn't successful.");
+        if (!message) {
+
+        } else {
+            message.reply("The authentication wasn't successful.");
+        }
     }
 };
 
