@@ -7,9 +7,8 @@ module.exports = {
         authReq.delete(userID);
 
         if (!message) {
-            // TODO: The user hasn't clicked the link for more than one hour
-            // think of some clever way how to convey that to him when you don't
-            // have the channel because of the way how you built this thing, you dumbass
+            const user = await client.fetchUser(userID);
+            user.send("You took too long to authenticate. Try to do the command again or contact any human (mini)mod to get your role assigned.");
             return;
         }
 
@@ -35,13 +34,14 @@ module.exports = {
 
         sendRedditUserEmbed(message.channel, discordUser, redditUsername, flair, karma, age);
     },
-    authFailure: function (client, r, authReq, response, state) {
+    authFailure: async function (client, r, authReq, response, state) {
         const userID = Buffer.from(state, 'base64').toString('ascii');
         const message = authReq.get(userID);
         authReq.delete(userID);
 
         if (!message) {
-
+            const user = await client.fetchUser(userID);
+            user.send("The authentication wasn't successful. Try to do the command again or contact any human (mini)mod to get your role assigned.");
         } else {
             message.reply("The authentication wasn't successful.");
         }
