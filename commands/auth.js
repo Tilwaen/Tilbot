@@ -1,4 +1,9 @@
 exports.run = async (client, message, args, level, r, unbClient) => {
+    if (!message.member.roles.find(role => role.name === client.config.defaultSettings.noRole)) {
+        message.reply("you already have your colour role assigned!");
+        return;
+    }
+
     const usernameBase64 = Buffer.from(message.author.id).toString('base64');
     message.author.send(`Please authenticate your Reddit account through the link below:\n\nhttps://www.reddit.com/api/v1/authorize?client_id=${client.config.redditAuth.clientID}&response_type=code&state=${usernameBase64}&redirect_uri=${client.config.defaultSettings.oauthRedirectUri}&duration=temporary&scope=identity`);
     message.reply("check your DMs!");
