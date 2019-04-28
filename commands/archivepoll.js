@@ -6,10 +6,12 @@ exports.run = async (client, message, args, level, r, unbClient) => {
         return;
     }
 
+    const modCategoryID = `463799764178305055`;
     const categoryName = args.join(' ');
     const category = message.guild.channels
             .filter(channel => channel.parent)  // Filter out channels that have a category
             .map(channel => channel.parent)
+            .filter(category => category.id !== modCategoryID)
             .find(category => category.name.toLowerCase().includes(categoryName.toLowerCase()));
 
     if (!category) {
