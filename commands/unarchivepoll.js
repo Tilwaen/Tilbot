@@ -20,10 +20,11 @@ exports.run = async (client, message, args, level, r, unbClient) => {
     }
 
     await message.channel.send(`--------------------\n**${category.name}**\n--------------------`);
-    const channels = category.children.sort((a, b) => b[1].name - a[1].name);
+    // .localeCompare() compares strings for equality
+    const channels = new Map([...category.children.entries()].sort((a, b) => a[1].name.localeCompare(b[1].name)));
 
     for (var [channelID, channel] of channels) {
-        const msg = await message.channel.send(`Unrchive channel ${channel}?`);
+        const msg = await message.channel.send(`Unarchive channel ${channel}?`);
         await msg.react("👍");
         await msg.react("👎");
         await msg.react("🤷");
