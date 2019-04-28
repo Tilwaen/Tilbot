@@ -9,7 +9,7 @@ exports.run = async (client, message, args, level, r, unbClient) => {
         return;
     }
 
-    const colours = ["Red", "Orange", "Yellow", "Green", "Blue", "Purple", "Mod"];
+    const colours = ["Red", "Orange", "Yellow", "Green", "Blue", "Purple", "Mod", "None"];
     var colourSubreddit;
 
     switch (args[0].toLowerCase()) {
@@ -41,6 +41,10 @@ exports.run = async (client, message, args, level, r, unbClient) => {
         const flairMap = new Map();
         for (var author of uniqueAuthorsPerPage) {
             const flair = await r.getSubreddit("flairwars").getUserFlair(author);
+            if (!flair.flair_text) {
+                flairMap.set(author, 'None');
+                break;
+            }
             // Unifies the seasonal flairs; for example, 'Yellow II', 'Yellow I' and 'Yellow'
             const flairColour = colours.filter(colour => flair.flair_text.includes(colour))[0];
             flairMap.set(author, flairColour);
