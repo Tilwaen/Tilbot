@@ -20,8 +20,9 @@ exports.run = async (client, message, args, level, r, unbClient) => {
     }
 
     await message.channel.send(`--------------------\n**${category.name}**\n--------------------`);
+    const channels = category.children.sort((a, b) => b[1] - a[1]);
 
-    for (var [channelID, channel] of category.children) {
+    for (var [channelID, channel] of channels) {
         const msg = await message.channel.send(`Unrchive channel ${channel}?`);
         await msg.react("👍");
         await msg.react("👎");
