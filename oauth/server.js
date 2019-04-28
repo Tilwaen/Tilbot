@@ -27,7 +27,7 @@ module.exports = (app, client, r, authReq) => app.get('/oauth/redirect', (req, r
     const data = {
         grant_type: 'authorization_code',
         code: code,
-        redirect_uri: client.config.defaultSettings.oauthRedirectUri
+        redirect_uri: client.config.oauth.redirectUri
     };
 
     // Get access token
