@@ -20,7 +20,7 @@ exports.run = async (client, message, args, level, r, unbClient) => {
     }
 
     await message.channel.send(`--------------------\n**${category.name}**\n--------------------`);
-    const channels = category.children.sort((a, b) => b[1] - a[1]);
+    const channels = category.children.sort((a, b) => b[1].name - a[1].name);
 
     for (var [channelID, channel] of channels) {
         const msg = await message.channel.send(`Archive channel ${channel}?`);
