@@ -34,7 +34,7 @@ module.exports = {
         await sendRedditUserEmbed(message.channel, discordUser, redditUsername, flair, karma, age);
 
         // Change the user's username (needs to be done on the guild member, not user, as the username is guild specific)
-        const guildMember = message.members;
+        const guildMember = message.member;
         guildMember.setNickname('/u/' + redditUsername);
 
         // If they don't have any flair, let them assign a flair first
@@ -57,11 +57,26 @@ module.exports = {
         const ageInDays = (now - accountCreated)/60/60/24; // s/min/hours
         console.log(ageInDays);
 
+        // The karma and age are not sufficient
         if (karma < karmaLimit || ageInDays < ageLimit) {
-            message.reply(`your account is either too new or has too litte karma to be let in automatically. A human minimod of your colour ${flair} has been notified and will be with you as soon as they can. Please be patient.`);
+            message.reply(`your account is either too new or has too litte karma to be let in automatically. A human minimod of your colour (${flair}) has been notified and will be with you as soon as they can. Please be patient.`);
+            // Send an embed to the need-role channel
             const needRoleChannel = message.guild.channels.get(client.config.oauth.needRolesChannelID);
+            if (!needRoleChannel) {
+                message.channel.send(`Error: Could not find the channel with ID ${client.config.oauth.needRolesChannelID} to log this event and notify the minimods that this user needs their attention; please tell the bot admins to solve this mess.`);
+                return;
+            }
             await sendRedditUserEmbed(needRoleChannel, discordUser, redditUsername, flair, karma, age);
-            await needRoleChannel.send();
+            // Ping the colour minimods there too
+            const minimods = client.config.minimods;
+            const colourMinimods = minimods[flair.toLowerCase()];
+            if (!colourMinimods) {
+                console.log(`Coulnd't find a minimod to ping when automatically letting in user ${redditUsername} with flair ${flair}.`);
+            } else {
+                // Get the minimod member role and ping them
+                const minimodUsers = colourMinimods.map(minimod => message.guild.members.get(minimod.id));
+                await needRoleChannel.send(minimodUsers.join(' '));
+            }
             return;
         }
 
@@ -75,6 +90,37 @@ module.exports = {
         const noRoleRole = message.guild.roles.find(role => role.name === client.config.defaultSettings.noRole);
         guildMember.addRole(colourRole);
         guildMember.removeRole(noRoleRole);
+
+        // Send the embed to the logging channel that the user was let in automatically
+        const loggingChannel = message.guild.channels.get(client.config.oauth.botAuthLoggingChannelID);
+        if (!loggingChannel) {
+            message.channel.send(`Error: Could not find the channel with ID ${client.config.oauth.botAuthLoggingChannelID} to log that this user has been let into the server automatically; please tell the bot admins to solve this mess.`);
+            return;
+        }
+        await sendRedditUserEmbed(loggingChannel, discordUser, redditUsername, flair, karma, age, `User was let in automatically`, `${discordUser}\n[${redditUsername}](https://www.reddit.com/u/${redditUsername})`);
+
+        // Welcome the person in their colour general channel
+        // Get the colour general channel
+        const colourGeneralChannel = message.guild.channels.find(channel => channel.name === `${flair.toLowerCase()}-general`);
+        if (!colourGeneralChannel) {
+            loggingChannel.send(`Error: Could not find the channel with name ${flair.toLowerCase()}-general welcome this user to their colour.`);
+            return;
+        }
+        // Get the welcome message
+        var welcomeMessage = client.config.oauth.welcomeMessage;
+        if (!welcomeMessage) {
+            loggingChannel.send(`Error: Could not load the welcome message to welcome user in ${colourGeneralChannel}.`);
+            return;
+        }
+        welcomeMessage = welcomeMessage.replace("{{user}}", discordUser);
+        welcomeMessage = welcomeMessage.replace("{{colour}}", flair);
+        // Append the server link if the colour has any
+        const colourServerInviteLink = client.config.colourServerInvites[flair.toLowerCase()];
+        if (colourServerInviteLink) {
+            welcomeMessage = welcomeMessage + ` and don't forget to join the ${flair} server: ${colourServerInviteLink}!`;
+        }
+        // Send the welcome message
+        colourGeneralChannel.send(welcomeMessage);
     },
     authFailure: async function (client, r, authReq, response, state) {
         const userID = Buffer.from(state, 'base64').toString('ascii');
@@ -90,7 +136,7 @@ module.exports = {
     }
 };
 
-async function sendRedditUserEmbed(channel, discordUser, redditUsername, flair, karma, age) {
+async function sendRedditUserEmbed(channel, discordUser, redditUsername, flair, karma, age, title, description) {
     let colours = [
         { name: "Red", imageUrl: "https://i.imgur.com/SChaKoz.jpg", colourHex: "#AF0303" },
         { name: "Orange", imageUrl: "https://i.imgur.com/CewHt0f.png", colourHex: "#F99A0C" },
@@ -104,14 +150,23 @@ async function sendRedditUserEmbed(channel, discordUser, redditUsername, flair, 
 
     let colour = colours.find(colour => flair.includes(colour.name));
 
-    var embed = new RichEmbed()
-        .setColor(colour.colourHex)
-        .setTitle("/u/" + redditUsername)
-        .setURL("https://www.reddit.com/u/" + redditUsername)
-        .setDescription(discordUser)
+    var embed = new RichEmbed();
+
+    if (!title) {
+        embed.setURL("https://www.reddit.com/u/" + redditUsername)
+        title = "/u/" + redditUsername;
+    }
+    // Love the ternary operator syntax :kek: This means if the description is set,
+    // use it, otherwise use discordUser as the description
+    description = description ? description : discordUser;
+
+    embed.setColor(colour.colourHex)
+        .setTitle(title)
+        .setDescription(description)
         .setThumbnail(colour.imageUrl)
         .addField("Flair", flair, true)
         .addField("Account created", age, true)
-        .addField("Karma", karma, true)
+        .addField("Karma", karma, true);
+
     await channel.send({ embed });
 };
