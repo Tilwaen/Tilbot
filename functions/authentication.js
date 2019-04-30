@@ -89,6 +89,13 @@ module.exports = {
         const noRoleRole = message.guild.roles.find(role => role.name === client.config.defaultSettings.noRole);
         await guildMember.addRole(colourRole);
         await guildMember.removeRole(noRoleRole);
+        // Give Blues the Freedmen role too
+        if (colourRole.name === 'Blue') {
+            const freedmenRole = message.guild.roles.find(role => role.name === 'Freedmen');
+            if (freedmenRole) {
+                await guildMember.addRole(freedmenRole);
+            }
+        }
 
         // Send the embed to the logging channel that the user was let in automatically
         const loggingChannel = message.guild.channels.get(client.config.oauth.botAuthLoggingChannelID);
