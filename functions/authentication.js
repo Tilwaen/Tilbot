@@ -35,7 +35,7 @@ module.exports = {
 
         // Change the user's username (needs to be done on the guild member, not user, as the username is guild specific)
         const guildMember = message.member;
-        guildMember.setNickname('/u/' + redditUsername);
+        await guildMember.setNickname('/u/' + redditUsername);
 
         // If they don't have any flair, let them assign a flair first
         const megathreadLink = 'https://www.reddit.com/r/flairwars/comments/bavhvo/comment_to_gain_a_team_megathread/';
