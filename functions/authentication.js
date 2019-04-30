@@ -50,8 +50,8 @@ module.exports = {
         }
 
         // Check the karma and age limits
-        const karmaLimit = client.config.defaultSettings.karmaLimit;
-        const ageLimit = client.config.defaultSettings.accountAgeLimitDays;
+        const karmaLimit = client.config.oauth.karmaLimit;
+        const ageLimit = client.config.oauth.accountAgeLimitDays;
 
         const now = new Date().getTime() / 1000;  // ms
         const ageInDays = (now - accountCreated)/60/60/24; // s/min/hours
