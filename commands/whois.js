@@ -70,7 +70,7 @@ async function sendRedditUserEmbed(channel, username, flair, karma, redditAge, d
         .addField("Karma", karma, true)
         .addField("Discord account created", discordMember.user.createdAt.toDateString(), true)
         .addField("Joined this server", discordMember.joinedAt.toDateString(), true)
-        .addField("Roles", discordMember.roles.map(([id, role]) => role));
+        .addField("Roles", Array.from(discordMember.roles, ([id, role]) => role));
     await channel.send({ embed });
 };
 
