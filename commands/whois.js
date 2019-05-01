@@ -82,7 +82,7 @@ async function sendRedditUserEmbed(channel, username, flair, karma, redditAge, d
 exports.conf = {
   enabled: true,
   guildOnly: true,
-  aliases: [],
+  aliases: ["user", "info", "userinfo"],
   permLevel: "User",
   channelPerms: "All",
   userCooldown: false,
@@ -91,8 +91,8 @@ exports.conf = {
 };
 
 exports.help = {
-  name: "redditinfo",
-  category: "Flairwars",
-  description: "Gives information about a Reddit user.",
-  usage: "redditinfo <Reddit account>"
+  name: "whois",
+  category: "Miscelaneous",
+  description: "Gives information about a user.",
+  usage: "whois <user>"
 };
