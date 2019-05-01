@@ -8,7 +8,10 @@ exports.run = async (client, message, args, level, r, unbClient) => {
     // No mention
     if (!member) {
         // Find the corresponding guild member nickname
-        guildMemberMatch = message.guild.members.find(m => m.nickname.toLowerCase().includes(args[0].toLowerCase()));
+        guildMemberMatch = message.guild.members.find(m => {
+            // There needs to be a condition because the user doesn't need to have a nickname
+            if (m.nickname) m.nickname.toLowerCase().includes(args[0].toLowerCase())
+        });
         member = guildMemberMatch;
         if (!guildMemberMatch) {
             // Find the corresponding user Discord username
@@ -70,7 +73,7 @@ async function sendRedditUserEmbed(channel, username, flair, karma, redditAge, d
         .addField("Karma", karma, true)
         .addField("Discord account created", discordMember.user.createdAt.toDateString(), true)
         .addField("Joined this server", discordMember.joinedAt.toDateString(), true)
-        .addField("Roles", Array.from(discordMember.roles, ([id, role]) => role));
+        .addField("Roles", Array.from(discordMember.roles, ([id, role]) => role).join(' '));
     await channel.send({ embed });
 };
 
