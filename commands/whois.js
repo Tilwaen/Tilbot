@@ -45,7 +45,7 @@ exports.run = async (client, message, args, level, r, unbClient) => {
     let discordCreated = member.user.createdAt.toDateString();;
     let discordServerJoined = member.joinedAt.toDateString();;
     let avatarUrl = member.user.avatarURL;
-    let roles = member.roles.values().join(' ');
+    let roles = member.roles.values();
     let id = member.user.id;
 
     sendRedditUserEmbed(message.channel, username, flair, karma, redditAge, discordCreated, discordServerJoined, avatarUrl, roles, id);
