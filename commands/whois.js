@@ -42,16 +42,10 @@ exports.run = async (client, message, args, level, r, unbClient) => {
     let accountCreated = redditUser.created_utc;
     let redditAge = new Date(accountCreated * 1000).toDateString();
 
-    let discordCreated = member.user.createdAt.toDateString();;
-    let discordServerJoined = member.joinedAt.toDateString();;
-    let avatarUrl = member.user.avatarURL;
-    let roles = member.roles.values();
-    let id = member.user.id;
-
-    sendRedditUserEmbed(message.channel, username, flair, karma, redditAge, discordCreated, discordServerJoined, avatarUrl, roles, id);
+    sendRedditUserEmbed(message.channel, username, flair, karma, redditAge, member);
 };
 
-async function sendRedditUserEmbed(channel, username, flair, karma, redditAge, discordCreated, discordServerJoined, avatarUrl, roles, id) {
+async function sendRedditUserEmbed(channel, username, flair, karma, redditAge, discordMember) {
     let colours = [
         { name: "Red", imageUrl: "https://i.imgur.com/SChaKoz.jpg", colourHex: "#AF0303" },
         { name: "Orange", imageUrl: "https://i.imgur.com/CewHt0f.png", colourHex: "#F99A0C" },
@@ -69,14 +63,14 @@ async function sendRedditUserEmbed(channel, username, flair, karma, redditAge, d
         .setColor(colour.colourHex)
         .setTitle("/u/" + username)
         .setURL("https://www.reddit.com/u/" + username)
-        .setThumbnail(avatarUrl)
-        .setFooter("ID: " + id)
+        .setThumbnail(discordMember.user.avatarURL)
+        .setFooter("ID: " + discordMember.user.id)
         .addField("Flair", flair)
         .addField("Reddit account created", redditAge, true)
         .addField("Karma", karma, true)
-        .addField("Discord account created", discordCreated, true)
-        .addField("Joined this server", discordServerJoined, true)
-        .addField("Roles", roles);
+        .addField("Discord account created", discordMember.user.createdAt.toDateString(), true)
+        .addField("Joined this server", discordMember.joinedAt.toDateString(), true)
+        .addField("Roles", discordMember.roles.map(([id, role]) => role));
     await channel.send({ embed });
 };
 
