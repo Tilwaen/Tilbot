@@ -92,7 +92,7 @@ async function sendRedditUserEmbed(channel, username, flair, karma, redditAge, d
     embed.addField("Discord account created", discordMember.user.createdAt.toDateString(), true)
         .addField("Joined this server", discordMember.joinedAt.toDateString(), true)
         .addField("Roles", Array.from(discordMember.roles, ([id, role]) => role)    // Map the map values to an array
-                                                                .filter(role => role.name !== "everyone")
+                                                                .filter(role => role.id !== discordMember.guild.id) // Filter out everyone role
                                                                 .join(' '));
 
     await channel.send({ embed });
