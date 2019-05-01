@@ -68,7 +68,7 @@ exports.conf = {
 
 exports.help = {
   name: "redditinfo",
-  category: "Flairwars",
+  category: "Miscelaneous",
   description: "Gives information about a Reddit user.",
   usage: "redditinfo <Reddit account>"
 };
