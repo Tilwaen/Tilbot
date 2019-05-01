@@ -1,14 +1,10 @@
 const { RichEmbed } = require('discord.js');
-
+// This command relies on each user having their server nicknames in the format of /u/RedditUsername
 exports.run = async (client, message, args, level, r, unbClient) => {
-    if (args.length !== 1) {
-        await message.channel.send("Please specify user");
-        return;
-    }
 
-    // This command relies on each user having their server nicknames in the format of /u/RedditUsername
+    // If there is no argument, take the author of the message, otherwise take the first mention
+    var member = (args.length < 1) ? message.guild.members.find(m => m.user === message.author) : message.mentions.members.first();
 
-    var member = message.mentions.members.first();
     // No mention
     if (!member) {
         // Find the corresponding guild member nickname
@@ -48,11 +44,14 @@ exports.run = async (client, message, args, level, r, unbClient) => {
 
     let discordCreated = member.user.createdAt.toDateString();;
     let discordServerJoined = member.joinedAt.toDateString();;
+    let avatarUrl = member.user.avatarURL;
+    let roles = member.roles.join(' ');
+    let id = member.user.id;
 
-    sendRedditUserEmbed(message.channel, username, flair, karma, redditAge, discordCreated, discordServerJoined);
+    sendRedditUserEmbed(message.channel, username, flair, karma, redditAge, discordCreated, discordServerJoined, avatarUrl, roles, id);
 };
 
-async function sendRedditUserEmbed(channel, username, flair, karma, redditAge, discordCreated, discordServerJoined) {
+async function sendRedditUserEmbed(channel, username, flair, karma, redditAge, discordCreated, discordServerJoined, avatarUrl, roles, id) {
     let colours = [
         { name: "Red", imageUrl: "https://i.imgur.com/SChaKoz.jpg", colourHex: "#AF0303" },
         { name: "Orange", imageUrl: "https://i.imgur.com/CewHt0f.png", colourHex: "#F99A0C" },
@@ -70,12 +69,14 @@ async function sendRedditUserEmbed(channel, username, flair, karma, redditAge, d
         .setColor(colour.colourHex)
         .setTitle("/u/" + username)
         .setURL("https://www.reddit.com/u/" + username)
-        .setThumbnail(colour.imageUrl)
+        .setThumbnail(avatarUrl)
+        .setFooter("ID: " + id)
         .addField("Flair", flair)
         .addField("Reddit account created", redditAge, true)
         .addField("Karma", karma, true)
         .addField("Discord account created", discordCreated, true)
         .addField("Joined this server", discordServerJoined, true)
+        .addField("Roles", roles);
     await channel.send({ embed });
 };
 
