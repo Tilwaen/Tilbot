@@ -27,7 +27,7 @@ exports.run = async (client, message, args, level, r, unbClient) => {
     // The Reddit account most probably won't match if the user doesn't have a nickname; send only Discord info
     if (!member.nickname) {
         await message.channel.send(`User ${member.user.username} doesn't have a nickname - sending Discord info only.`);
-        await sendRedditUserEmbed(message.channel, username, "None", 0, 0, member, false);
+        await sendDiscordEmbed(message.channel, member);
         return;
     }
 
@@ -43,7 +43,7 @@ exports.run = async (client, message, args, level, r, unbClient) => {
         userFlair = await r.getSubreddit('flairwars').getUserFlair(username);
     } catch (error) {
         message.channel.send(`This is not a valid Reddit account: https://www.reddit.com/u/${username}; sending Discord info only.`);
-        await sendRedditUserEmbed(message.channel, username, "None", 0, 0, member, false);
+        await sendDiscordEmbed(message.channel, member);
         return;
     };
 
@@ -55,6 +55,10 @@ exports.run = async (client, message, args, level, r, unbClient) => {
 
     await sendRedditUserEmbed(message.channel, username, flair, karma, redditAge, member, true);
 };
+
+async function sendDiscordEmbed(channel, discordMember) {
+    await sendRedditUserEmbed(channel, "", "None", 0, 0, discordMember, false);
+}
 
 async function sendRedditUserEmbed(channel, username, flair, karma, redditAge, discordMember, sendRedditInfo) {
     let colours = [
@@ -80,14 +84,16 @@ async function sendRedditUserEmbed(channel, username, flair, karma, redditAge, d
         embed.addField("Flair", flair)
             .addField("Reddit account created", redditAge, true)
             .addField("Karma", karma, true)
-            .setDescription(`${discordMember}\n[/u/ + ${username}](https://www.reddit.com/u/ + ${username})`);
+            .setDescription(`${discordMember}\n[/u/${username}](https://www.reddit.com/u/${username})`);
     } else {
         embed.setDescription(`${discordMember}`);
     }
 
     embed.addField("Discord account created", discordMember.user.createdAt.toDateString(), true)
         .addField("Joined this server", discordMember.joinedAt.toDateString(), true)
-        .addField("Roles", Array.from(discordMember.roles, ([id, role]) => role).join(' '));
+        .addField("Roles", Array.from(discordMember.roles, ([id, role]) => role)    // Map the map values to an array
+                                                                .filter(role => role.name !== "everyone")
+                                                                .join(' '));
 
     await channel.send({ embed });
 };
