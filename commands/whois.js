@@ -25,8 +25,10 @@ exports.run = async (client, message, args, level, r, unbClient) => {
     }
 
     let prefixRegex = /\/?u\//;
+    // Again, the member nickname doesn't need to be set
+    let usernameSource = member.nickname ? member.nickname : args[0];
     // Filters out the possible /u/ or u/ prefix, as well as an empty string after the split
-    let username = member.nickname.split(prefixRegex).filter(Boolean)[0];
+    let username = usernameSource.split(prefixRegex).filter(Boolean)[0];
 
     var redditUser;
     var userFlair;
