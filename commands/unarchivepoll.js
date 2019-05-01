@@ -44,7 +44,7 @@ exports.conf = {
 
 exports.help = {
   name: "unarchivepoll",
-  category: "Miscelaneous",
+  category: "Moderating",
   description: "Create simple polls (upvote/downvote/shrug) to unarchive each channel of the given category.",
   usage: "unarchivepoll <channel category name>"
 };

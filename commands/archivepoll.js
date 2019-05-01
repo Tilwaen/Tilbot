@@ -44,7 +44,7 @@ exports.conf = {
 
 exports.help = {
   name: "archivepoll",
-  category: "Miscelaneous",
+  category: "Moderating",
   description: "Create simple polls (upvote/downvote/shrug) to archive each channel of the given category.",
   usage: "archivepoll <channel category name>"
 };
