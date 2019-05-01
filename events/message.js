@@ -141,7 +141,7 @@ module.exports = async (client, r, unbClient, userCooldowns, globalCooldowns, au
 async function checkMEE6ShardMessage(client, unbClient, message) {
     if (message.author.id === client.config.shards.mee6ID) {
         if (message.channel.id === client.config.shards.shardTriggerChannelID) {
-            const regex = /level 7 ?!/; // level 5! or level 5 !
+            const regex = /level 5 ?!/; // level 5! or level 5 !
             if (message.content.match(regex)) {
                 const member = message.mentions.members.first();
                 if (!member) {
