@@ -24,11 +24,16 @@ exports.run = async (client, message, args, level, r, unbClient) => {
         }
     }
 
+    // The Reddit account most probably won't match if the user doesn't have a nickname; send only Discord info
+    if (!member.nickname) {
+        await message.channel.send(`User ${member.user.username} doesn't have a nickname - sending Discord info only.`);
+        await sendRedditUserEmbed(message.channel, username, "None", 0, 0, member, false);
+        return;
+    }
+
     let prefixRegex = /\/?u\//;
-    // Again, the member nickname doesn't need to be set
-    let usernameSource = member.nickname ? member.nickname : args[0];
     // Filters out the possible /u/ or u/ prefix, as well as an empty string after the split
-    let username = usernameSource.split(prefixRegex).filter(Boolean)[0];
+    let username = member.nickname.split(prefixRegex).filter(Boolean)[0];
 
     var redditUser;
     var userFlair;
@@ -37,7 +42,8 @@ exports.run = async (client, message, args, level, r, unbClient) => {
         redditUser = await r.getUser(username).fetch();
         userFlair = await r.getSubreddit('flairwars').getUserFlair(username);
     } catch (error) {
-        message.channel.send("This is not a valid Reddit account: https://www.reddit.com/u/" + username);
+        message.channel.send(`This is not a valid Reddit account: https://www.reddit.com/u/${username}; sending Discord info only.`);
+        await sendRedditUserEmbed(message.channel, username, "None", 0, 0, member, false);
         return;
     };
 
@@ -47,10 +53,10 @@ exports.run = async (client, message, args, level, r, unbClient) => {
     let accountCreated = redditUser.created_utc;
     let redditAge = new Date(accountCreated * 1000).toDateString();
 
-    sendRedditUserEmbed(message.channel, username, flair, karma, redditAge, member);
+    await sendRedditUserEmbed(message.channel, username, flair, karma, redditAge, member, true);
 };
 
-async function sendRedditUserEmbed(channel, username, flair, karma, redditAge, discordMember) {
+async function sendRedditUserEmbed(channel, username, flair, karma, redditAge, discordMember, sendRedditInfo) {
     let colours = [
         { name: "Red", imageUrl: "https://i.imgur.com/SChaKoz.jpg", colourHex: "#AF0303" },
         { name: "Orange", imageUrl: "https://i.imgur.com/CewHt0f.png", colourHex: "#F99A0C" },
@@ -66,16 +72,23 @@ async function sendRedditUserEmbed(channel, username, flair, karma, redditAge, d
 
     var embed = new RichEmbed()
         .setColor(colour.colourHex)
-        .setTitle("/u/" + username)
-        .setURL("https://www.reddit.com/u/" + username)
+        .setTitle(discordMember.user.tag)
         .setThumbnail(discordMember.user.avatarURL)
         .setFooter("ID: " + discordMember.user.id)
-        .addField("Flair", flair)
-        .addField("Reddit account created", redditAge, true)
-        .addField("Karma", karma, true)
-        .addField("Discord account created", discordMember.user.createdAt.toDateString(), true)
+
+    if (sendRedditInfo) {
+        embed.addField("Flair", flair)
+            .addField("Reddit account created", redditAge, true)
+            .addField("Karma", karma, true)
+            .setDescription(`${discordMember}\n[/u/ + ${username}](https://www.reddit.com/u/ + ${username})`);
+    } else {
+        embed.setDescription(`${discordMember}`);
+    }
+
+    embed.addField("Discord account created", discordMember.user.createdAt.toDateString(), true)
         .addField("Joined this server", discordMember.joinedAt.toDateString(), true)
         .addField("Roles", Array.from(discordMember.roles, ([id, role]) => role).join(' '));
+
     await channel.send({ embed });
 };
 
