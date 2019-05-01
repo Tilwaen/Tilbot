@@ -3,7 +3,7 @@ const { RichEmbed } = require('discord.js');
 exports.run = async (client, message, args, level, r, unbClient) => {
 
     // If there is no argument, take the author of the message, otherwise take the first mention
-    var member = (args.length < 1) ? message.guild.members.find(m => m.user === message.author) : message.mentions.members.first();
+    var member = (args.length < 1) ? message.member : message.mentions.members.first();
 
     // No mention
     if (!member) {
@@ -45,7 +45,7 @@ exports.run = async (client, message, args, level, r, unbClient) => {
     let discordCreated = member.user.createdAt.toDateString();;
     let discordServerJoined = member.joinedAt.toDateString();;
     let avatarUrl = member.user.avatarURL;
-    let roles = member.roles.join(' ');
+    let roles = member.roles.values().join(' ');
     let id = member.user.id;
 
     sendRedditUserEmbed(message.channel, username, flair, karma, redditAge, discordCreated, discordServerJoined, avatarUrl, roles, id);
