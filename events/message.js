@@ -149,7 +149,7 @@ async function checkMEE6ShardMessage(client, unbClient, message) {
                     return;
                 }
                 await message.channel.send("Congratulations on reaching the 5th level! You are now eligible for **shards** - a virtual currency which you can trade with other users. You will get 1000 shards - spend them well.\n\n**More info on shards:**https://www.reddit.com/r/flairwars/wiki/shards");
-                await unbClient.editUserBalance(message.guild.id, member.user.id, { cash }, "Reached level 5");
+                await unbClient.editUserBalance(message.guild.id, member.user.id, { cash: 1000 }, "Reached level 5");
             }
         }
     }
