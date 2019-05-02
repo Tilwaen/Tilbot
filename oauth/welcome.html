@@ -5,34 +5,119 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Flairwars authentication</title>
+    <title>Flairwars</title>
     <style>
         img {
+            vertical-align: middle;
+            border: 0;
+        }
+        .header-img {
+            position: absolute;
+            left: 0px;
+            top: 0px;
+            right: auto;
+            bottom: auto;
+            width: 100%;
+            height: auto;
+            z-index: 0;
+            max-width: none;
             display: block;
-            margin-left: auto;
-            margin-right: auto;
-            width: 40%;
+        }
+        body {
+            overflow: hidden;
+            font-size: 16px;
+            /*color: #282828;*/
+            color: #fff;
+            font-family: Open Sans, sans-serif;
+            line-height: 1.42857;
+        }
+        #wrapper {
+            z-index: 1;
+            text-align: center;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            margin-right: -50%;
+            transform: translate(-50%, -50%);
+        }
+        #center-card {
+            background-color:rgba(0, 0, 0, 0.5);
+            padding: 30px;
+            position: relative;
+            text-shadow: 0 0 10px rgba(0, 0, 0, 1);
+            border-radius: 6px;
+        }
+        .headline {
+            margin: 0;
+            font-size: 18px;
+            line-height: 1;
+            /*color: #fff;*/
+            position: relative;
+        }
+        .description {
+            margin: 20px;
+        }
+        .btn {
+            display: inline-block;
+            margin-top: 20px;
+            margin-bottom: 0px;
+            vertical-align: middle;
+            /*border: 1px solid #282828;*/
+            border: 1px solid #fff;
+            color: #fff;
+            font-weight: normal;
+            font-size: 18px;
+            text-align: center;
+            padding: 10px 25px;
+            background: transparent;
+            line-height: 1.333;
+            border-radius: 6px;
+            cursor: pointer;
+            white-space: nowrap;
+            text-decoration: none;
+        }
+        .btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        #new-to-fw {
+            margin-top: 20px;
         }
     </style>
 </head>
 
 <body>
-    <div style="align:center">
-        <div id="image">
-            <img src="./checkmark.png" alt="Successfully authenticated">
+    <div id="wrapper">
+        <div id="center-card">
+            <div class="headline" id="authenticated-status">
+                Authenticated
+            </div>
+            <div id="authenticated-description" class="description">
+                What now
+            </div>
+            <hr />
+            <div id="new-to-fw" class="headline">
+                New to Flairwars?
+            </div>
+            <div class="description">
+                Check out the Wiki with useful information
+                <br />
+                on raids, alliances and more:
+            </div>
+            <a href="https://www.reddit.com/r/flairwars/wiki/index" id="wiki-btn" class="btn">Wiki</a>
         </div>
     </div>
+    <img class="header-img" src="./background-drops.jpg" alt="">
 </body>
 <script>
     const query = window.location.search.substring(1)
     const authenticated = query.split('authenticated=')[1]
 
-    var text;
     if (authenticated === 'true') {
-        text = document.createTextNode(`Successfully authenticated!`);
+        document.getElementById("authenticated-status").innerHTML = `Successfully authenticated!`;
+        document.getElementById("authenticated-description").innerHTML = `You can now close this window.`;
     } else {
-        text = document.createTextNode(`Authentication wasn't successful.`);
+        document.getElementById("authenticated-status").innerHTML = `Authentication wasn't successful.`;
+        document.getElementById("authenticated-description").innerHTML = `Please try again or contact a human moderator.`;
     }
-    document.body.appendChild(text);
 </script>
 </html>
