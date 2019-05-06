@@ -11,24 +11,18 @@
             vertical-align: middle;
             border: 0;
         }
-        .header-img {
-            position: absolute;
-            left: 0px;
-            top: 0px;
-            right: auto;
-            bottom: auto;
-            width: 100%;
-            height: auto;
-            z-index: 0;
-            max-width: none;
-            display: block;
-        }
         body {
             overflow: hidden;
             font-size: 16px;
             color: #fff;
             font-family: Open Sans, sans-serif;
             line-height: 1.42857;
+            height:100%;
+            background: url('./background-drops.jpg') no-repeat center center fixed;
+              -webkit-background-size: cover;
+              -moz-background-size: cover;
+              -o-background-size: cover;
+              background-size: cover;
         }
         #wrapper {
             z-index: 1;
@@ -103,7 +97,6 @@
             <a href="https://www.reddit.com/r/flairwars/wiki/index" id="wiki-btn" class="btn">Wiki</a>
         </div>
     </div>
-    <img class="header-img" src="./background-drops.jpg" alt="">
 </body>
 <script>
     const query = window.location.search.substring(1)
