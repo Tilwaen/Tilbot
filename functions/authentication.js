@@ -112,6 +112,12 @@ module.exports = {
             await loggingChannel.send(`Error: Could not find the channel with name ${flair.toLowerCase()}-general welcome this user to their colour.`);
             return;
         }
+        // Get welcome role
+        const welcomeRole = message.guild.roles.get(client.config.oauth.welcomeRoleID);
+        if (!welcomeRole) {
+            await loggingChannel.send(`Error: Could not find the welcome role with ID: ${client.config.oauth.welcomeRoleID}.`);
+            return;
+        }
         // Get the welcome message
         var welcomeMessage = client.config.oauth.welcomeMessage;
         if (!welcomeMessage) {
@@ -125,6 +131,7 @@ module.exports = {
         if (colourServerInviteLink) {
             welcomeMessage = welcomeMessage + ` and don't forget to join the ${flair} server: ${colourServerInviteLink}!`;
         }
+        welcomeMessage = `${welcomeMessage}\n${welcomeRole}`;
         // Send the welcome message
         await colourGeneralChannel.send(welcomeMessage);
     },
