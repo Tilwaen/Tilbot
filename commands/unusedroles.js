@@ -8,7 +8,7 @@ exports.conf = {
   enabled: true,
   guildOnly: true,
   aliases: [],
-  permLevel: "Minimod",
+  permLevel: "User",
   channelPerms: "Fun",
   userCooldown: false,
   globalCooldown: false,
