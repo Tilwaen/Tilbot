@@ -52,6 +52,12 @@ module.exports = {
             return;
         }
 
+        const colourRole = message.guild.roles.find(role => role.name === flair);
+        if (!colourRole) {
+            await message.channel.send(`Error: Didn't find a role with name \`${flair}\``);
+            return;
+        }
+
         // Check the karma and age limits
         const karmaLimit = client.config.oauth.karmaLimit;
         const ageLimit = client.config.oauth.accountAgeLimitDays;
@@ -69,22 +75,12 @@ module.exports = {
                 return;
             }
             await sendRedditUserEmbed(needRoleChannel, discordUser, redditUsername, flair, karma, age);
-            // Ping the colour minimods there too
-            const minimods = client.config.minimods;
-            const colourMinimods = minimods[flair.toLowerCase()];
-            if (!colourMinimods) {
-                console.log(`Coulnd't find a minimod to ping when automatically letting in user ${redditUsername} with flair ${flair}.`);
-            } else {
-                // Get the minimod member role and ping them
-                const minimodUsers = colourMinimods.map(minimod => message.guild.members.get(minimod.id));
-                await needRoleChannel.send(minimodUsers.join(' '));
-            }
-            return;
-        }
 
-        const colourRole = message.guild.roles.find(role => role.name === flair);
-        if (!colourRole) {
-            await message.channel.send(`Error: Didn't find a role with name \`${flair}\``);
+            // Ping the colour role in the logging channel instead of the minimods
+            // (see the older version of this code for that)
+            // so that the mods don't need to change the code each time when a new minimod is selected
+            await needRoleChannel.send(colourRole);
+                
             return;
         }
 
