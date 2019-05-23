@@ -1,5 +1,8 @@
 const { RichEmbed } = require('discord.js');
 
+/**
+ * Prints the amount of shards per colour
+ */
 exports.run = async (client, message, args, level, r, unbClient) => {
     const colours = client.config.colours;
     const colourRoles = colours.map(colour => message.guild.roles.find(role => role.name === colour));

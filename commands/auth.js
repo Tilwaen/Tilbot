@@ -1,18 +1,24 @@
 exports.run = async (client, message, args, level, r, unbClient) => {
+    // If the user doesn't have No Role, they probably don't need to do this command in the first place
     if (!message.member.roles.find(role => role.name === client.config.defaultSettings.noRole)) {
         message.reply("you already have your colour role assigned!");
         return;
     }
 
+    // Send the auth link to their DMs
     const usernameBase64 = Buffer.from(message.author.id).toString('base64');
     message.author.send(`Please authenticate your Reddit account through the link below. **We do not gain any sensitive data about your account**, all we do is verify that you're not claiming to be someone else.\n\nhttps://www.reddit.com/api/v1/authorize?client_id=${client.config.redditAuth.clientID}&response_type=code&state=${usernameBase64}&redirect_uri=${client.config.oauth.redirectUri}&duration=temporary&scope=identity`);
     message.reply("check your DMs!");
+
+    // Now we need to wait for the GET request from Reddit
+    // See ../oauth/server.js for the server request interception
+    // and ../functions/authentication.js for processing it
 };
 
 exports.conf = {
   enabled: true,
   guildOnly: true,
-  aliases: ["authenticate"],
+  aliases: ["authenticate", "giverole", "getrole"],
   permLevel: "User",
   channelPerms: "All",
   userCooldown: false,

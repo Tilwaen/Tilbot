@@ -1,6 +1,6 @@
+// This is a leftover after the Anniversary Slashes event
 exports.run = async (client, message, args, level, r, unbClient) => {
     let botRole = message.guild.roles.find(role => role.name === "Tilbot");
-    //let regex = /^(\\?u\/)/;
     let regex = /^((\\?u\/\/?)|(\|?u\|)|(\/u\\))/;
     const msg = await message.channel.send("Changing the nicknames...");
     // .comparePositionTo() is negative if this position is lower (the other role is higher)

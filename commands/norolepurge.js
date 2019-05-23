@@ -2,24 +2,28 @@ exports.run = async (client, message, args, level, r, unbClient) => {
     let inputDate = new Date(args[0]);
     let botRole = message.guild.roles.find(role => role.name === "Tilbot");
     let runInLiveMode = args[1] === "kick";
-    console.log("runInLiveMode: " + runInLiveMode);
 
-    let membersWithRole = await message.guild.roles.find(role => role.name === "No Role").members;
+    let membersWithRole = await message.guild.roles
+                                                .find(role => role.name === "No Role")
+                                                .members;
 
+    // Filter out people who joined after the input date or have higher role than this bot
     let filteredMembers = membersWithRole
             .filter(member => member.joinedAt < inputDate)
             .filter(m => m.highestRole.comparePositionTo(botRole) < 0);
-    //const filteredList = filteredMembers.forEach(m => console.log(`${m.user.tag}, joined ${m.joinedAt}`));
 
-    var stringOfFilteredMembers = filteredMembers.map(m => m.user.tag).join('\n');
+    var stringOfFilteredMembers = filteredMembers
+                                        .map(m => m.user.tag)
+                                        .join('\n');
+
     if (stringOfFilteredMembers.length === 0) {
         stringOfFilteredMembers = "No such users";
     }
 
-    console.log(`Total number of users with No Role: ${membersWithRole.size}. Found ${filteredMembers.size} users with No Role who joined before ${inputDate} to be purged.`);
-    const msg = await message.channel.send(`Total number of users with No Role: ${membersWithRole.size}. Found ${filteredMembers.size} users with No Role who joined before ${inputDate} to be purged.`);
+    const msg = await message.channel.send(`Total number of users with No Role: **${membersWithRole.size}**.\nFound **${filteredMembers.size}** users with No Role who joined before *${inputDate}* to be purged.`);
     const msg2 = await message.channel.send(`${stringOfFilteredMembers}`);
 
+    // Kick the users if running in the live mode
     if (runInLiveMode) {
         console.log("Running in live mode, kicking users.");
         const msg3 = await message.channel.send(`Running in live mode, kicking users.`);

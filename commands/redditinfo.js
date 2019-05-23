@@ -1,5 +1,8 @@
 const { RichEmbed } = require('discord.js');
 
+/**
+ * Prints info about a specified Reddit account
+ */
 exports.run = async (client, message, args, level, r, unbClient) => {
     if (args.length !== 1) {
         await message.channel.send("Please specify a Reddit account");
@@ -8,11 +11,13 @@ exports.run = async (client, message, args, level, r, unbClient) => {
 
     let prefixRegex = /\/?u\//;
     // Filters out the possible /u/ or u/ prefix, as well as an empty string after the split
+    // Simply put, this extracts the username from the input
     let username = args[0].split(prefixRegex).filter(Boolean)[0];
 
     var redditUser;
     var userFlair;
 
+    // Get the Reddit user and check their flair on the main subreddit
     try {
         redditUser = await r.getUser(username).fetch();
         userFlair = await r.getSubreddit('flairwars').getUserFlair(username);

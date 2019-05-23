@@ -1,11 +1,13 @@
 const { RichEmbed } = require('discord.js');
 
 exports.run = async (client, message, args, level, r, unbClient) => {
+    // If the message doesn't contain '{', it's a simple up/down/shrug poll
     if (message.content.indexOf("{") === -1) {
         await message.react("👍");
         await message.react("👎");
         await message.react("🤷");
     } else {
+        // Otherwise find the matching '}' bracket and parse its content as a poll title
         let firstBracket = message.content.indexOf("{");
         if (message.content.indexOf("}") === -1) {
             sendIncorrectSyntaxMessage(client, message);
@@ -13,6 +15,7 @@ exports.run = async (client, message, args, level, r, unbClient) => {
         }
         let secondBracket = message.content.indexOf("}");
         let title = message.content.substring(firstBracket + 1, secondBracket);
+        // This is the rest of the message which should contain options in square brackets, [like] [this]
         var text = message.content.substr(secondBracket + 1);
 
         // A - T (20 emojis)
@@ -21,13 +24,16 @@ exports.run = async (client, message, args, level, r, unbClient) => {
             "🇰", "🇱", "🇲", "🇳", "🇴",
             "🇵", "🇶", "🇷", "🇸", "🇹"];
 
+        // Parse the options from the square brackets
         let options = parseOptions(client, message, text);
 
+        // Maximum number of available reactions is 20
         if (options.length > 20) {
             await message.channel.send(`Maximum allowed number of options is 20 (due to the emoji reaction limit)`);
             return;
         }
 
+        // Set up the embed content - the letter and its corresponding option
         var optionsText = "";
         for (var i = 0; i < options.length; i++) {
             optionsText += emojiList[i] + " " + options[i] + "\n\n";
@@ -36,12 +42,11 @@ exports.run = async (client, message, args, level, r, unbClient) => {
         var embed = new RichEmbed()
             .setTitle(title)
             .setDescription(optionsText)
-            //.setAuthor(message.author.username, message.author.displayAvatarURL)
             .setColor(0xC9DDFF)
-            //.setTimestamp();
 
         let msg = await message.channel.send({ embed });
 
+        // After the message is sent, react to it
         for (var i = 0; i < options.length; i++) {
             await msg.react(emojiList[i]);
         }

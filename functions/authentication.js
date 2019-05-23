@@ -1,5 +1,8 @@
 const { RichEmbed } = require('discord.js');
 
+/*
+ * Is launched from the ../oauth/server.js after the authentication request is intercepted
+ */
 module.exports = {
     authSuccess: async function (client, r, authReq, response, state) {
         const userID = Buffer.from(state, 'base64').toString('ascii');

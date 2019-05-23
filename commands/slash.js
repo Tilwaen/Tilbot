@@ -1,3 +1,6 @@
+/**
+ * This is a leftover from the Anniversary slash event
+ */
 exports.run = async (client, message, args, level, r, unbClient) => {
     // Megaserver
     const role1ID = "563611117302185984";

@@ -6,9 +6,10 @@ exports.run = async (client, message, args, level, r, unbClient) => {
 
     var map = new Map();
 
-    let channels = message.guild.channels.filter(c => c.type === "text").array();
-    console.log("Channels: " + channels);
-    console.log("Number of channels: " + channels.length);
+    // Get all the guild text channels
+    let channels = message.guild.channels
+                                    .filter(c => c.type === "text")
+                                    .array();
     var msg = await message.channel.send(`Number of channels: ${channels.length}\nProcessing channels...\n`);
 
     for (const channel of channels) {
@@ -48,6 +49,7 @@ exports.run = async (client, message, args, level, r, unbClient) => {
         const msg4 = await message.channel.send(`**Users that aren't active but can't be kicked by this bot:**\n${stringUsersNotFoundButNotKickable}`);
     }
 
+    // Kick the users if running in a live mode
     if (runInLiveMode) {
         console.log("Running in live mode, kicking users.");
         const msg5 = await message.channel.send(`Running in live mode, kicking users. Bots will not be kicked.`);
@@ -55,7 +57,7 @@ exports.run = async (client, message, args, level, r, unbClient) => {
             if (!member.kickable) return message.reply(`I cannot kick member ${member}`);
             if (member.user.bot) return message.reply(`${member} is a bot, I will not kick it`);
             console.log(`Kicking ${member}`);
-            member.kick();
+            member.kick("Purge of inactive users");
         });
     } else {
         console.log("Running in test mode, no users were kicked.");
@@ -69,7 +71,9 @@ async function processChannel(channel, map, inputDate) {
     console.log("In channel: " + channel.name);
 
     while (true) {
+        // We can only process at most 100 messages ;-; so we need to paginate
         const options = { limit: 100 };
+        // ID od the last message (unless it's the first batch of messages
         if (last_id) {
             options.before = last_id;
         }
@@ -77,14 +81,14 @@ async function processChannel(channel, map, inputDate) {
         const messages = await channel.fetchMessages(options);
 
         for (const message of messages.array()) {
+            // Found earlier date, stop searching in this channel
             if (message.createdAt <= inputDate) {
-                console.log("Found earlier date; stop searching in #" + channel.name);
                 break;
             }
 
+            // Found a new person who we don't have saved yet
             if (!map.has(message.author.id)) {
                 map.set(message.author.id, message.createdAt);
-                console.log("Found a message from " + message.author.username + "; createdAt: " + message.createdAt);
             }
         }
 

@@ -1,5 +1,9 @@
 const { RichEmbed } = require('discord.js');
-// This command relies on each user having their server nicknames in the format of /u/RedditUsername
+
+/**
+ * Prints Reddit and Discord info about the mentioned user.
+ * This command relies on each user having their server nicknames in the format of /u/RedditUsername
+ */
 exports.run = async (client, message, args, level, r, unbClient) => {
 
     // If there is no argument, take the author of the message, otherwise take the first mention

@@ -44,8 +44,7 @@ module.exports = async (client, r, unbClient, userCooldowns, globalCooldowns, au
     const level = client.permlevel(message);
     const channelPermLevel = client.channelPerm(message);
 
-    // Check whether the command, or alias, exist in the collections defined
-    // in app.js.
+    // Check whether the command, or alias, exist in the collections defined in app.js.
     const cmd = client.commands.get(command) || client.commands.get(client.aliases.get(command));
     // using this const varName = thing OR otherthign; is a pretty efficient
     // and clean way to grab one of 2 values!
@@ -85,6 +84,7 @@ module.exports = async (client, r, unbClient, userCooldowns, globalCooldowns, au
     }
 
     // Command specific cooldown
+    // User cooldown
     if (cmd.conf.userCooldown) {
         if (!userCooldowns.has(command)) {
             userCooldowns.set(command, new Discord.Collection());
@@ -107,6 +107,7 @@ module.exports = async (client, r, unbClient, userCooldowns, globalCooldowns, au
         setTimeout(() => timestamps.delete(message.author.id), cooldownAmount);
     }
 
+    // Global cooldown
     if (cmd.conf.globalCooldown) {
         const now = Date.now();
         const cooldownAmount = (cmd.conf.cooldownDuration) * 1000;
@@ -139,9 +140,12 @@ module.exports = async (client, r, unbClient, userCooldowns, globalCooldowns, au
 };
 
 async function checkMEE6ShardMessage(client, unbClient, message) {
+    // If it's MEE6
     if (message.author.id === client.config.shards.mee6ID) {
+        // In the channel where it announces levels
         if (message.channel.id === client.config.shards.shardTriggerChannelID) {
             const regex = /level 5 ?!/; // level 5! or level 5 !
+            // and the message contains level 5
             if (message.content.match(regex)) {
                 const member = message.mentions.members.first();
                 if (!member) {
@@ -149,6 +153,7 @@ async function checkMEE6ShardMessage(client, unbClient, message) {
                     return;
                 }
                 await message.channel.send("Congratulations on reaching the 5th level! You are now eligible for **shards** - a virtual currency which you can trade with other users. You will get 1000 shards - spend them well.\n\n**More info on shards:**https://www.reddit.com/r/flairwars/wiki/shards");
+                // Add the shards
                 await unbClient.editUserBalance(message.guild.id, member.user.id, { cash: 1000 }, "Reached level 5");
             }
         }

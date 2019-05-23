@@ -1,3 +1,7 @@
+/**
+ * This exists because I didn't trust the userpurge command to run well, lmao
+ * So I copied its output into the hardcoded array and kicked these users when I was sure that they can be kicked
+ */
 exports.run = async (client, message, args, level, r, unbClient) => {
     let botRole = message.guild.roles.find(role => role.name === "Tilbot");
     let runInLiveMode = args[0] === "kick";
@@ -38,7 +42,7 @@ async function sendTrimmedMessage(channel, content) {
 };
 
 exports.conf = {
-  enabled: true,
+  enabled: false,
   guildOnly: true,
   aliases: [],
   permLevel: "Oil",

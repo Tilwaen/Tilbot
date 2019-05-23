@@ -1,4 +1,5 @@
 exports.run = async (client, message, args, level, r, unbClient) => {
+    // No arguments passed
     if (args.length === 0) {
         await message.channel.send("Please specify a colour");
         return;
@@ -12,6 +13,7 @@ exports.run = async (client, message, args, level, r, unbClient) => {
     const colours = client.config.flairs;
     var colourSubreddit;
 
+    // This will get refactored in the next commit, I swear
     switch (args[0].toLowerCase()) {
         case "red": colourSubreddit = "DSRRed"; break;
         case "pink":
@@ -24,10 +26,12 @@ exports.run = async (client, message, args, level, r, unbClient) => {
                     return;
     }
 
+    // Yaml syntax highlighting for that shiny turqouise colour header
     text = `\`\`\`yaml\n${colourSubreddit}\`\`\`\n`;
     var msg = await message.channel.send("Counting...");
 
     const numberOfHotPages = 5;
+    // This is an identifier of the last post on the page
     var after = 0;
 
     for (var i = 1; i <= numberOfHotPages; i++) {
@@ -35,25 +39,34 @@ exports.run = async (client, message, args, level, r, unbClient) => {
         const posts = await getHotPage(r, colourSubreddit, after);
         msg = await msg.edit(text + i + ". page, verifying user flairs");
 
+        // Create an array of post authors from the array of posts
         const authorsPerPage = posts.map(post => post.author.name);
-        // This all is to reduce the amount of Reddit API requests
+        // This all is to reduce the amount of Reddit API requests - remove duplicate authors from the array
         const uniqueAuthorsPerPage = [...new Set(authorsPerPage)];
         const flairMap = new Map();
+        // For each unique author on the current hot page, check their flair on the main sub
+        // and save it into the map (with the author being the map key); (map ~ dictionary structure)
         for (var author of uniqueAuthorsPerPage) {
             const flair = await r.getSubreddit("flairwars").getUserFlair(author);
+            // If the user doesn't have any flair assigned on the main subreddit,
+            // let's say that they have the "None" flair
             if (!flair.flair_text) {
                 flairMap.set(author, 'None');
                 break;
             }
             // Unifies the seasonal flairs; for example, 'Yellow II', 'Yellow I' and 'Yellow'
+            // are all compared to just 'Yellow'
             const flairColour = colours.filter(colour => flair.flair_text.includes(colour))[0];
+            // Replace this unified flair as the map value under the author key
             flairMap.set(author, flairColour);
         }
 
         msg = await msg.edit(text + i + ". page, mapping users to flairs");
+        // Remember that array of post authors per hot page? Let's transform it to an array of colour flairs now
         const flairsFromAuthors = authorsPerPage.map(author => flairMap.get(author));
 
         text = text + `**Number of posts on the ${i}. page:**\n`;
+        // Count the number of occurrences for each colour
         colours.forEach(colour => {
             const numberOfColourPosts = flairsFromAuthors.filter(flair => flair === colour).length;
             if (numberOfColourPosts > 0) {
@@ -63,12 +76,17 @@ exports.run = async (client, message, args, level, r, unbClient) => {
 
         text = text + '\n';
         msg = await msg.edit(text);
+        // Update the variable which stores the last post to fetch the next hotpage
         after = posts[posts.length - 1].name;
     }
 };
 
 async function getHotPage(r, subreddit, after) {
-    return await r.getSubreddit(subreddit).getHot({ limit: 25, after: after }).filter(post => !post.stickied);
+    // Stickied posts are fetched, but don't count toward the 25 posts limit
+    // Limit: how many posts; after: the last previous post (after = 0 fetches from the start)
+    return await r.getSubreddit(subreddit)
+                        .getHot({ limit: 25, after: after })
+                        .filter(post => !post.stickied);
 }
 
 exports.conf = {
