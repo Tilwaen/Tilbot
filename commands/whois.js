@@ -55,14 +55,11 @@ exports.run = async (client, message, args, level, r, unbClient) => {
     };
 
     let flair = userFlair.flair_text ? userFlair.flair_text : 'None';
-    console.log("Flair: " + flair);
+    // Filter out the season winner ticks
     let colour = client.config.flairs.find(colour => flair.includes(colour));
-    console.log("Colour: " + colour);
-    console.log("Flair info:");
-    console.log(client.config.flairInfo);
+    // But it doesn't filter mods/ex mods :sedcet:
+    if (flair === "Mod" || flair === "Ex Mod") colour = flair;
     let colourInfo = client.config.flairInfo[colour.toLowerCase()];
-    console.log("Colour info:");
-    console.log(colourInfo);
     let karma = redditUser.link_karma + redditUser.comment_karma;
 
     let accountCreated = redditUser.created_utc;

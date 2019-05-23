@@ -27,7 +27,10 @@ exports.run = async (client, message, args, level, r, unbClient) => {
     };
 
     let flair = userFlair.flair_text ? userFlair.flair_text : 'None';
+    // Filter out the season winner ticks
     let colour = client.config.flairs.find(colour => flair.includes(colour));
+    // But it doesn't filter mods/ex mods :sedcet:
+    if (flair === "Mod" || flair === "Ex Mod") colour = flair;
     let colourInfo = client.config.flairInfo[colour.toLowerCase()];
     let karma = redditUser.link_karma + redditUser.comment_karma;
 
@@ -42,7 +45,7 @@ async function sendRedditUserEmbed(channel, username, colourInfo, karma, age) {
         .setColor(colourInfo.colourHex)
         .setTitle("/u/" + username)
         .setURL("https://www.reddit.com/u/" + username)
-        .setThumbnail(colourInfo.imageUrl)
+        .setThumbnail(colourInfo.iconUrl)
         .addField("Flair", colourInfo.name, true)
         .addField("Account created", age, true)
         .addField("Karma", karma, true)
