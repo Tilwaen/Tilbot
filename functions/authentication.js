@@ -131,7 +131,7 @@ module.exports = {
         welcomeMessage = welcomeMessage.replace("{{user}}", discordUser);
         welcomeMessage = welcomeMessage.replace("{{colour}}", flair);
         // Append the server link if the colour has any
-        const colourServerInviteLink = client.config.colourServerInvites[flair.toLowerCase()];
+        const colourServerInviteLink = client.config.flairInfo[flair.toLowerCase()].serverInvite;
         if (colourServerInviteLink) {
             welcomeMessage = welcomeMessage + ` and don't forget to join the ${flair} server: ${colourServerInviteLink}!`;
         }

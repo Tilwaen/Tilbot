@@ -27,35 +27,23 @@ exports.run = async (client, message, args, level, r, unbClient) => {
     };
 
     let flair = userFlair.flair_text ? userFlair.flair_text : 'None';
+    let colour = client.config.colours.find(colour => flair.includes(colour));
+    let colourInfo = client.config.flairInfo[colour.toLowerCase()];
     let karma = redditUser.link_karma + redditUser.comment_karma;
 
     let accountCreated = redditUser.created_utc;
     let age = new Date(accountCreated * 1000).toDateString();
 
-    sendRedditUserEmbed(message.channel, username, flair, karma, age);
+    sendRedditUserEmbed(message.channel, username, colourInfo, karma, age);
 };
 
-async function sendRedditUserEmbed(channel, username, flair, karma, age) {
-    let colours = [
-        { name: "Red", imageUrl: "https://i.imgur.com/SChaKoz.jpg", colourHex: "#AF0303" },
-        { name: "Orange", imageUrl: "https://i.imgur.com/CewHt0f.png", colourHex: "#F99A0C" },
-        { name: "Yellow", imageUrl: "https://i.imgur.com/835G1zP.jpg", colourHex: "#FFE500" },
-        { name: "Green", imageUrl: "https://i.imgur.com/MNKwjES.jpg", colourHex: "#3ACE04" },
-        { name: "Blue", imageUrl: "https://i.imgur.com/8AJrVmx.png", colourHex: "#213AEF" },
-        { name: "Purple", imageUrl: "https://i.imgur.com/rZFSCIP.jpg", colourHex: "#AF0ECC" },
-        { name: "Mod", imageUrl: "https://i.imgur.com/Z0AM4lA.png", colourHex: "#C9DDFF" },
-        { name: "Ex Mod", imageUrl: "https://i.imgur.com/Z0AM4lA.png", colourHex: "#C9DDFF" },
-        { name: "None", imageUrl: "https://i.imgur.com/dmJbwoN.png", colourHex: "#C9DDFF" }
-    ];
-
-    let colour = colours.find(colour => flair.includes(colour.name));
-
+async function sendRedditUserEmbed(channel, username, colourInfo, karma, age) {
     var embed = new RichEmbed()
-        .setColor(colour.colourHex)
+        .setColor(colourInfo.colourHex)
         .setTitle("/u/" + username)
         .setURL("https://www.reddit.com/u/" + username)
-        .setThumbnail(colour.imageUrl)
-        .addField("Flair", flair, true)
+        .setThumbnail(colourInfo.imageUrl)
+        .addField("Flair", colourInfo.name, true)
         .addField("Account created", age, true)
         .addField("Karma", karma, true)
     await channel.send({ embed });

@@ -10,26 +10,24 @@ exports.run = async (client, message, args, level, r, unbClient) => {
         return;
     }
 
-    const colours = client.config.flairs;
+    const colours = client.config.colours;
     var colourSubreddit;
 
-    // This will get refactored in the next commit, I swear
-    switch (args[0].toLowerCase()) {
-        case "red": colourSubreddit = "DSRRed"; break;
-        case "pink":
-        case "orange": colourSubreddit = "TheOrangeArmyHQ"; break;
-        case "yellow": colourSubreddit = "YellowOnlineUnion"; break;
-        case "green": colourSubreddit = "TheGreenArmy"; break;
-        case "blue": colourSubreddit = "UnitedBlueRepublic"; break;
-        case "purple": colourSubreddit = "PurpleImperium"; break;
-        default:    await message.channel.send("Wrong syntax. The syntax is \`~count colour\`");
-                    return;
+    // If the input is a colour (defined in client.config.colours) - excluding mods, for example
+    if (colours.some(colour => colour.toLowerCase() === args[0].toLowerCase())) {
+        colourSubreddit = client.config.flairInfo[args[0].toLowerCase()].subreddit;
+    } else if (args[0].toLowerCase() === "pink") {
+        colourSubreddit = client.config.flairInfo["orange"].subreddit;
+    } else {
+        await message.channel.send("Wrong syntax. The syntax is \`~count colour\`");
+        return;
     }
 
     // Yaml syntax highlighting for that shiny turqouise colour header
     text = `\`\`\`yaml\n${colourSubreddit}\`\`\`\n`;
     var msg = await message.channel.send("Counting...");
 
+    const flairs = client.config.flairs;
     const numberOfHotPages = 5;
     // This is an identifier of the last post on the page
     var after = 0;
@@ -56,7 +54,7 @@ exports.run = async (client, message, args, level, r, unbClient) => {
             }
             // Unifies the seasonal flairs; for example, 'Yellow II', 'Yellow I' and 'Yellow'
             // are all compared to just 'Yellow'
-            const flairColour = colours.filter(colour => flair.flair_text.includes(colour))[0];
+            const flairColour = flairs.filter(flairText => flair.flair_text.includes(flairText))[0];
             // Replace this unified flair as the map value under the author key
             flairMap.set(author, flairColour);
         }
@@ -67,7 +65,7 @@ exports.run = async (client, message, args, level, r, unbClient) => {
 
         text = text + `**Number of posts on the ${i}. page:**\n`;
         // Count the number of occurrences for each colour
-        colours.forEach(colour => {
+        flairs.forEach(colour => {
             const numberOfColourPosts = flairsFromAuthors.filter(flair => flair === colour).length;
             if (numberOfColourPosts > 0) {
                 text = `${text}**${colour}:** ${numberOfColourPosts}\n`;

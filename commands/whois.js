@@ -55,41 +55,29 @@ exports.run = async (client, message, args, level, r, unbClient) => {
     };
 
     let flair = userFlair.flair_text ? userFlair.flair_text : 'None';
+    let colour = client.config.colours.find(colour => flair.includes(colour));
+    let colourInfo = client.config.flairInfo[colour.toLowerCase()];
     let karma = redditUser.link_karma + redditUser.comment_karma;
 
     let accountCreated = redditUser.created_utc;
     let redditAge = new Date(accountCreated * 1000).toDateString();
 
-    await sendRedditUserEmbed(message.channel, username, flair, karma, redditAge, member, true);
+    await sendRedditUserEmbed(message.channel, username, colourInfo, karma, redditAge, member, true);
 };
 
 async function sendDiscordEmbed(channel, discordMember) {
     await sendRedditUserEmbed(channel, "", "None", 0, 0, discordMember, false);
 }
 
-async function sendRedditUserEmbed(channel, username, flair, karma, redditAge, discordMember, sendRedditInfo) {
-    let colours = [
-        { name: "Red", imageUrl: "https://i.imgur.com/SChaKoz.jpg", colourHex: "#AF0303" },
-        { name: "Orange", imageUrl: "https://i.imgur.com/CewHt0f.png", colourHex: "#F99A0C" },
-        { name: "Yellow", imageUrl: "https://i.imgur.com/835G1zP.jpg", colourHex: "#FFE500" },
-        { name: "Green", imageUrl: "https://i.imgur.com/MNKwjES.jpg", colourHex: "#3ACE04" },
-        { name: "Blue", imageUrl: "https://i.imgur.com/8AJrVmx.png", colourHex: "#213AEF" },
-        { name: "Purple", imageUrl: "https://i.imgur.com/rZFSCIP.jpg", colourHex: "#AF0ECC" },
-        { name: "Mod", imageUrl: "https://i.imgur.com/Z0AM4lA.png", colourHex: "#C9DDFF" },
-        { name: "Ex Mod", imageUrl: "https://i.imgur.com/Z0AM4lA.png", colourHex: "#C9DDFF" },
-        { name: "None", imageUrl: "https://i.imgur.com/dmJbwoN.png", colourHex: "#C9DDFF" }
-    ];
-
-    let colour = colours.find(colour => flair.includes(colour.name));
-
+async function sendRedditUserEmbed(channel, username, colourInfo, karma, redditAge, discordMember, sendRedditInfo) {
     var embed = new RichEmbed()
-        .setColor(colour.colourHex)
+        .setColor(colourInfo.colourHex)
         .setTitle(discordMember.user.tag)
         .setThumbnail(discordMember.user.avatarURL)
         .setFooter("ID: " + discordMember.user.id)
 
     if (sendRedditInfo) {
-        embed.addField("Flair", flair)
+        embed.addField("Flair", colourInfo.name)
             .addField("Reddit account created", redditAge, true)
             .addField("Karma", karma, true)
             .setDescription(`${discordMember}\n[/u/${username}](https://www.reddit.com/u/${username})`);
