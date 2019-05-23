@@ -27,7 +27,7 @@ exports.run = async (client, message, args, level, r, unbClient) => {
     };
 
     let flair = userFlair.flair_text ? userFlair.flair_text : 'None';
-    let colour = client.config.colours.find(colour => flair.includes(colour));
+    let colour = client.config.flairs.find(colour => flair.includes(colour));
     let colourInfo = client.config.flairInfo[colour.toLowerCase()];
     let karma = redditUser.link_karma + redditUser.comment_karma;
 

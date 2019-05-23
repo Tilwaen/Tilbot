@@ -55,8 +55,14 @@ exports.run = async (client, message, args, level, r, unbClient) => {
     };
 
     let flair = userFlair.flair_text ? userFlair.flair_text : 'None';
-    let colour = client.config.colours.find(colour => flair.includes(colour));
+    console.log("Flair: " + flair);
+    let colour = client.config.flairs.find(colour => flair.includes(colour));
+    console.log("Colour: " + colour);
+    console.log("Flair info:");
+    console.log(client.config.flairInfo);
     let colourInfo = client.config.flairInfo[colour.toLowerCase()];
+    console.log("Colour info:");
+    console.log(colourInfo);
     let karma = redditUser.link_karma + redditUser.comment_karma;
 
     let accountCreated = redditUser.created_utc;
