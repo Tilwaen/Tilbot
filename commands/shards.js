@@ -110,7 +110,7 @@ async function sendShardEmbed(msg, colourString, colourTotal, total, usersGone, 
 };
 
 exports.conf = {
-  enabled: true,
+  enabled: false,
   guildOnly: true,
   aliases: ["countshards", "shardcount"],
   permLevel: "User",
