@@ -79,8 +79,8 @@ module.exports = {
             // Ping the colour role in the logging channel instead of the minimods
             // (see the older version of this code for that)
             // so that the mods don't need to change the code each time when a new minimod is selected
-            await needRoleChannel.send(colourRole);
-                
+            await needRoleChannel.send(colourRole.toString());
+
             return;
         }
 
