@@ -44,8 +44,8 @@ module.exports = {
             return;
         }
 
-        if (flair === 'Mod') {
-            await message.reply(`I can't assign a moderator role, so I'll just dab on you instead`);
+        if (flair === 'Mod' || flair === 'Ex Mod') {
+            await message.reply(`Welcome back <3 I can't give you your roles. Wait for a human, please.`);
             return;
         }
 
@@ -158,6 +158,7 @@ async function sendRedditUserEmbed(channel, discordUser, redditUsername, flair, 
         { name: "Blue", imageUrl: "https://i.imgur.com/8AJrVmx.png", colourHex: "#213AEF" },
         { name: "Purple", imageUrl: "https://i.imgur.com/rZFSCIP.jpg", colourHex: "#AF0ECC" },
         { name: "Mod", imageUrl: "https://i.imgur.com/Z0AM4lA.png", colourHex: "#C9DDFF" },
+        { name: "Ex Mod", imageUrl: "https://i.imgur.com/Z0AM4lA.png", colourHex: "#C9DDFF" },
         { name: "None", imageUrl: "https://i.imgur.com/dmJbwoN.png", colourHex: "#C9DDFF" }
     ];
 

@@ -1,7 +1,7 @@
 const { RichEmbed } = require('discord.js');
 
 exports.run = async (client, message, args, level, r, unbClient) => {
-    const colours = ["Red", "Orange", "Yellow", "Green", "Blue", "Purple"];
+    const colours = client.config.colours;
     const colourRoles = colours.map(colour => message.guild.roles.find(role => role.name === colour));
     var colourBalance = new Map();
     const adminRoleID = message.guild.roles.find(role => role.name.toLowerCase() === client.config.defaultSettings.adminRole).id;

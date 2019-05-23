@@ -9,7 +9,7 @@ exports.run = async (client, message, args, level, r, unbClient) => {
         return;
     }
 
-    const colours = ["Red", "Orange", "Yellow", "Green", "Blue", "Purple", "Mod", "None"];
+    const colours = client.config.flairs;
     var colourSubreddit;
 
     switch (args[0].toLowerCase()) {
