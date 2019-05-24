@@ -82,9 +82,9 @@ module.exports = {
 
             // Enable/disable the role ping
             const colourRoleWasMentionable = colourRole.mentionable;
-            if (!colourRoleWasMentionable) colourRole.setMentionable(true);
+            if (!colourRoleWasMentionable) await colourRole.setMentionable(true);
             await needRoleChannel.send(colourRole.toString());
-            if (!colourRoleWasMentionable) colourRole.setMentionable(false);
+            if (!colourRoleWasMentionable) await colourRole.setMentionable(false);
 
             return;
         }
