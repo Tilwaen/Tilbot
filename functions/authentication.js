@@ -75,7 +75,7 @@ module.exports = {
                 await message.channel.send(`Error: Could not find the channel with ID ${client.config.oauth.needRolesChannelID} to log this event and notify the minimods that this user needs their attention; please tell the bot admins to solve this mess.`);
                 return;
             }
-            let colourInfo = redditEmbed.getColourInfoFromFlair(flair);
+            let colourInfo = redditEmbed.getColourInfoFromFlair(client, flair);
             await redditEmbed.sendRedditUserEmbed(  needRoleChannel,    // Channel
                                                     discordUser,        // Discord user
                                                     redditUsername,     // Reddit username
@@ -116,7 +116,7 @@ module.exports = {
             await message.channel.send(`Error: Could not find the channel with ID ${client.config.oauth.botAuthLoggingChannelID} to log that this user has been let into the server automatically; please tell the bot admins to solve this mess.`);
             return;
         }
-        let colourInfo = redditEmbed.getColourInfoFromFlair(flair);
+        let colourInfo = redditEmbed.getColourInfoFromFlair(client, flair);
         await sendRedditUserEmbed(  loggingChannel,                     // Channel
                                     discordUser,                        // Discord user
                                     redditUsername,                     // Reddit username

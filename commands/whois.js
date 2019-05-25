@@ -55,7 +55,7 @@ exports.run = async (client, message, args, level, r, unbClient) => {
     };
 
     let flair = userFlair.flair_text ? userFlair.flair_text : 'None';
-    let colourInfo = redditEmbed.getColourInfoFromFlair(flair);
+    let colourInfo = redditEmbed.getColourInfoFromFlair(client, flair);
     let karma = redditUser.link_karma + redditUser.comment_karma;
 
     let accountCreated = redditUser.created_utc;
