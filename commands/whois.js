@@ -1,5 +1,5 @@
 const { RichEmbed } = require('discord.js');
-
+const redditEmbed = require('../functions/redditEmbed.js');
 /**
  * Prints Reddit and Discord info about the mentioned user.
  * This command relies on each user having their server nicknames in the format of /u/RedditUsername
@@ -55,11 +55,7 @@ exports.run = async (client, message, args, level, r, unbClient) => {
     };
 
     let flair = userFlair.flair_text ? userFlair.flair_text : 'None';
-    // Filter out the season winner ticks
-    let colour = client.config.flairs.find(colour => flair.includes(colour));
-    // But it doesn't filter mods/ex mods :sedcet:
-    if (flair === "Mod" || flair === "Ex Mod") colour = flair;
-    let colourInfo = client.config.flairInfo[colour.toLowerCase()];
+    let colourInfo = redditEmbed.getColourInfoFromFlair(flair);
     let karma = redditUser.link_karma + redditUser.comment_karma;
 
     let accountCreated = redditUser.created_utc;

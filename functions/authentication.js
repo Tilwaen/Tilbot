@@ -1,4 +1,5 @@
 const { RichEmbed } = require('discord.js');
+const redditEmbed = require('../functions/redditEmbed.js');
 
 /*
  * Is launched from the ../oauth/server.js after the authentication request is intercepted
@@ -74,7 +75,15 @@ module.exports = {
                 await message.channel.send(`Error: Could not find the channel with ID ${client.config.oauth.needRolesChannelID} to log this event and notify the minimods that this user needs their attention; please tell the bot admins to solve this mess.`);
                 return;
             }
-            await sendRedditUserEmbed(needRoleChannel, discordUser, redditUsername, flair, karma, age);
+            let colourInfo = redditEmbed.getColourInfoFromFlair(flair);
+            await redditEmbed.sendRedditUserEmbed(  needRoleChannel,    // Channel
+                                                    discordUser,        // Discord user
+                                                    redditUsername,     // Reddit username
+                                                    colourInfo,         // ColourInfo (specified in config.js)
+                                                    karma,              // Reddit karma
+                                                    age,                // Reddit account age
+                                                    `User needs to be admitted by a minimod`,        // Title
+                                                    `${discordUser}\n[/u/${redditUsername}](https://www.reddit.com/u/${redditUsername})`);      // Description
 
             // Ping the colour role in the logging channel instead of the minimods
             // (see the older version of this code for that)
@@ -107,7 +116,15 @@ module.exports = {
             await message.channel.send(`Error: Could not find the channel with ID ${client.config.oauth.botAuthLoggingChannelID} to log that this user has been let into the server automatically; please tell the bot admins to solve this mess.`);
             return;
         }
-        await sendRedditUserEmbed(loggingChannel, discordUser, redditUsername, flair, karma, age, `User was let in automatically`, `${discordUser}\n[${redditUsername}](https://www.reddit.com/u/${redditUsername})`);
+        let colourInfo = redditEmbed.getColourInfoFromFlair(flair);
+        await sendRedditUserEmbed(  loggingChannel,                     // Channel
+                                    discordUser,                        // Discord user
+                                    redditUsername,                     // Reddit username
+                                    colourInfo,                         // colourInfo (specified in config.js)
+                                    karma,                              // Reddit karma
+                                    age,                                // Reddit account age
+                                    `User was let in automatically`,    // Title
+                                    `${discordUser}\n[/u/${redditUsername}](https://www.reddit.com/u/${redditUsername})`); // Description
 
         // Welcome the person in their colour general channel
         // Get the colour general channel
@@ -153,38 +170,3 @@ module.exports = {
     }
 };
 
-async function sendRedditUserEmbed(channel, discordUser, redditUsername, flair, karma, age, title, description) {
-    let colours = [
-        { name: "Red", imageUrl: "https://i.imgur.com/SChaKoz.jpg", colourHex: "#AF0303" },
-        { name: "Orange", imageUrl: "https://i.imgur.com/CewHt0f.png", colourHex: "#F99A0C" },
-        { name: "Yellow", imageUrl: "https://i.imgur.com/835G1zP.jpg", colourHex: "#FFE500" },
-        { name: "Green", imageUrl: "https://i.imgur.com/MNKwjES.jpg", colourHex: "#3ACE04" },
-        { name: "Blue", imageUrl: "https://i.imgur.com/8AJrVmx.png", colourHex: "#213AEF" },
-        { name: "Purple", imageUrl: "https://i.imgur.com/rZFSCIP.jpg", colourHex: "#AF0ECC" },
-        { name: "Mod", imageUrl: "https://i.imgur.com/Z0AM4lA.png", colourHex: "#C9DDFF" },
-        { name: "Ex Mod", imageUrl: "https://i.imgur.com/Z0AM4lA.png", colourHex: "#C9DDFF" },
-        { name: "None", imageUrl: "https://i.imgur.com/dmJbwoN.png", colourHex: "#C9DDFF" }
-    ];
-
-    let colour = colours.find(colour => flair.includes(colour.name));
-
-    var embed = new RichEmbed();
-
-    if (!title) {
-        embed.setURL("https://www.reddit.com/u/" + redditUsername)
-        title = "/u/" + redditUsername;
-    }
-    // Love the ternary operator syntax :kek: This means if the description is set,
-    // use it, otherwise use discordUser as the description
-    description = description ? description : discordUser;
-
-    embed.setColor(colour.colourHex)
-        .setTitle(title)
-        .setDescription(description)
-        .setThumbnail(colour.imageUrl)
-        .addField("Flair", flair, true)
-        .addField("Account created", age, true)
-        .addField("Karma", karma, true);
-
-    await channel.send({ embed });
-};
