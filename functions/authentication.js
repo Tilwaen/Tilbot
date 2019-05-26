@@ -35,16 +35,17 @@ module.exports = {
         // Split at space and take the first part because of the totem season ticks (filter only the colour)
         let flair = userFlair.flair_text ? userFlair.flair_text.split(' ')[0] : 'None';*/
         const flair = await redditFlair.getFlair(r, redditUsername);
+        const colourInfo = redditFlair.getColourInfoFromFlair(client, flair);
 
         // Send the user info embed to the channel where the user did the command
         await redditEmbed.sendRedditUserEmbed(
                 message.channel,
                 discordUser,
                 redditUsername,
-                flair,
+                colourInfo,
                 karma,
                 age,
-                `User authenticated, has to be let in manually`,        // Title
+                `User authenticated`,        // Title
                 `${discordUser}\n[/u/${redditUsername}](https://www.reddit.com/u/${redditUsername})`);      // Description);
 
         // Change the user's username (needs to be done on the guild member, not user, as the username is guild specific)
@@ -85,7 +86,6 @@ module.exports = {
                 await message.channel.send(`Error: Could not find the channel with ID ${client.config.oauth.needRolesChannelID} to log this event and notify the minimods that this user needs their attention; please tell the bot admins to solve this mess.`);
                 return;
             }
-            let colourInfo = redditFlair.getColourInfoFromFlair(client, flair);
             await redditEmbed.sendRedditUserEmbed(  needRoleChannel,    // Channel
                                                     discordUser,        // Discord user
                                                     redditUsername,     // Reddit username
@@ -126,7 +126,6 @@ module.exports = {
             await message.channel.send(`Error: Could not find the channel with ID ${client.config.oauth.botAuthLoggingChannelID} to log that this user has been let into the server automatically; please tell the bot admins to solve this mess.`);
             return;
         }
-        let colourInfo = redditFlair.getColourInfoFromFlair(client, flair);
         await redditEmbed.sendRedditUserEmbed(  loggingChannel,                     // Channel
                                     discordUser,                        // Discord user
                                     redditUsername,                     // Reddit username
