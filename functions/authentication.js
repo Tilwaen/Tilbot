@@ -1,6 +1,6 @@
 const { RichEmbed } = require('discord.js');
 const redditEmbed = require('../functions/redditEmbed.js');
-const redditFlair = require('../functions/redditEmbed.js');
+const redditFlair = require('../functions/redditFlair.js');
 
 /*
  * Is launched from the ../oauth/server.js after the authentication request is intercepted
