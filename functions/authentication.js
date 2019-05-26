@@ -1,5 +1,6 @@
 const { RichEmbed } = require('discord.js');
 const redditEmbed = require('../functions/redditEmbed.js');
+const redditFlair = require('../functions/redditEmbed.js');
 
 /*
  * Is launched from the ../oauth/server.js after the authentication request is intercepted
@@ -35,7 +36,15 @@ module.exports = {
         let flair = userFlair.flair_text ? userFlair.flair_text.split(' ')[0] : 'None';
 
         // Send the user info embed to the channel where the user did the command
-        await sendRedditUserEmbed(message.channel, discordUser, redditUsername, flair, karma, age);
+        await redditEmbed.sendRedditUserEmbed(
+                message.channel,
+                discordUser,
+                redditUsername,
+                flair,
+                karma,
+                age,
+                `User authenticated, has to be let in manually`,        // Title
+                `${discordUser}\n[/u/${redditUsername}](https://www.reddit.com/u/${redditUsername})`);      // Description);
 
         // Change the user's username (needs to be done on the guild member, not user, as the username is guild specific)
         const guildMember = message.member;
@@ -75,7 +84,7 @@ module.exports = {
                 await message.channel.send(`Error: Could not find the channel with ID ${client.config.oauth.needRolesChannelID} to log this event and notify the minimods that this user needs their attention; please tell the bot admins to solve this mess.`);
                 return;
             }
-            let colourInfo = redditEmbed.getColourInfoFromFlair(client, flair);
+            let colourInfo = redditFlair.getColourInfoFromFlair(client, flair);
             await redditEmbed.sendRedditUserEmbed(  needRoleChannel,    // Channel
                                                     discordUser,        // Discord user
                                                     redditUsername,     // Reddit username
@@ -116,8 +125,8 @@ module.exports = {
             await message.channel.send(`Error: Could not find the channel with ID ${client.config.oauth.botAuthLoggingChannelID} to log that this user has been let into the server automatically; please tell the bot admins to solve this mess.`);
             return;
         }
-        let colourInfo = redditEmbed.getColourInfoFromFlair(client, flair);
-        await sendRedditUserEmbed(  loggingChannel,                     // Channel
+        let colourInfo = redditFlair.getColourInfoFromFlair(client, flair);
+        await redditEmbed.sendRedditUserEmbed(  loggingChannel,                     // Channel
                                     discordUser,                        // Discord user
                                     redditUsername,                     // Reddit username
                                     colourInfo,                         // colourInfo (specified in config.js)

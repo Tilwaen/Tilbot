@@ -1,5 +1,6 @@
 const { RichEmbed } = require('discord.js');
 const redditEmbed = require('../functions/redditEmbed.js');
+const redditFlair = require('../functions/redditFlair.js');
 
 /**
  * Prints info about a specified Reddit account
@@ -16,19 +17,17 @@ exports.run = async (client, message, args, level, r, unbClient) => {
     let username = args[0].split(prefixRegex).filter(Boolean)[0];
 
     var redditUser;
-    var userFlair;
 
     // Get the Reddit user and check their flair on the main subreddit
     try {
         redditUser = await r.getUser(username).fetch();
-        userFlair = await r.getSubreddit('flairwars').getUserFlair(username);
     } catch (error) {
         message.channel.send("This is not a valid Reddit account: https://www.reddit.com/u/" + username);
         return;
     };
 
-    let flair = userFlair.flair_text ? userFlair.flair_text : 'None';
-    let colourInfo = redditEmbed.getColourInfoFromFlair(client, flair);
+    let flair = await redditFlair.getFlair(r, username);
+    let colourInfo = redditFlair.getColourInfoFromFlair(client, flair);
     let karma = redditUser.link_karma + redditUser.comment_karma;
 
     let accountCreated = redditUser.created_utc;

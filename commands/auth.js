@@ -1,4 +1,21 @@
+const redditEmbed = require('../functions/redditEmbed.js');
+
 exports.run = async (client, message, args, level, r, unbClient) => {
+
+    // A minimod/mod run this command to let someone (mention) in and to get them welcomed
+    // TODO: Hotfix needed, this will be updated in the next commit
+    /*if (message.member.roles.find(role => (role.name === client.config.defaultSettings.minimodRole
+                                        || role.name === client.config.defaultSettings.adminRole))) {
+        const member = message.mentions.members.first();
+        if (!member) {
+            await message.channel.send("Please mention the user that you want to let in.");
+            return;
+        }
+
+        await message.react('👌');   // :ok_hand:
+        return;
+    }*/
+
     // If the user doesn't have No Role, they probably don't need to do this command in the first place
     if (!message.member.roles.find(role => role.name === client.config.defaultSettings.noRole)) {
         message.reply("you already have your colour role assigned!");
