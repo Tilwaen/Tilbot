@@ -25,17 +25,9 @@ module.exports = {
         const age = new Date(accountCreated * 1000).toDateString();
 
         // Get the user's flair
-        /*var userFlair;
-        try {
-            userFlair = await r.getSubreddit('flairwars').getUserFlair(redditUsername);
-        } catch (error) {
-            await message.channel.send("This is not a valid Reddit account: https://www.reddit.com/u/" + redditUsername);
-            return;
-        };
-        // Split at space and take the first part because of the totem season ticks (filter only the colour)
-        let flair = userFlair.flair_text ? userFlair.flair_text.split(' ')[0] : 'None';*/
-        const flair = await redditFlair.getFlair(r, redditUsername);
-        const colourInfo = redditFlair.getColourInfoFromFlair(client, flair);
+        const flairInfo = await redditFlair.getFlair(r, redditUsername);
+        const colourInfo = redditFlair.getColourInfoFromFlair(client, flairInfo);
+        const flair = colourInfo.name;
 
         // Send the user info embed to the channel where the user did the command
         await redditEmbed.sendRedditUserEmbed(
