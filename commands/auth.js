@@ -90,7 +90,7 @@ async function minimodLetUserIn(client, message, args, r) {
     await authentication.letUserIn(client, message, member,
                         colourRole, colourInfo,
                         redditUsername, karma, age,
-                        `User was let in by minimod ${message.author}`);
+                        `User was let in by minimod ${message.author.tag}`);
 
     await message.react('👌');   // :ok_hand:
     return;
