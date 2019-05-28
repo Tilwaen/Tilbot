@@ -39,7 +39,7 @@ async function minimodLetUserIn(client, message, args, r) {
         return;
     }
 
-    if (!member.nickname.include("/u/")) {
+    if (!member.nickname.includes("/u/")) {
         await message.channel.send("Please use this command only on users who have their usernames set according to the /u/redditAccount naming convention.");
         return;
     }
