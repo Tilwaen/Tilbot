@@ -100,6 +100,25 @@ module.exports = {
             return;
         }
 
+        await letUserIn(client, message, guildMember,
+                        colourRole, colourInfo,
+                        redditUsername, karma, age,
+                        `User was let in automatically`);
+    },
+    authFailure: async function (client, r, authReq, response, state) {
+        const userID = Buffer.from(state, 'base64').toString('ascii');
+        const message = authReq.get(userID);
+        authReq.delete(userID);
+
+        if (!message) {
+            const user = await client.fetchUser(userID);
+            user.send("The authentication wasn't successful. Try to do the command again or contact any human (mini)mod to get your role assigned.");
+        } else {
+            message.reply("The authentication wasn't successful.");
+        }
+    },
+    // This is separated into its own function because it's used in here and when a mini/mod lets a person in
+    letUserIn: async function (client, message, guildMember, colourRole, colourInfo, redditUsername, karma, age, embedTitleString) {
         // Assign the colour and take the No Role
         const noRoleRole = message.guild.roles.find(role => role.name === client.config.defaultSettings.noRole);
         await guildMember.addRole(colourRole);
@@ -112,20 +131,24 @@ module.exports = {
             }
         }
 
+        const flair = colourInfo.name;
+        // If no title string is supplied, say that the user was let in automatically in the embed title
+        embedTitleString = embedTitleString ? embedTitleString : `User was let in automatically`;
+
         // Send the embed to the logging channel that the user was let in automatically
         const loggingChannel = message.guild.channels.get(client.config.oauth.botAuthLoggingChannelID);
         if (!loggingChannel) {
-            await message.channel.send(`Error: Could not find the channel with ID ${client.config.oauth.botAuthLoggingChannelID} to log that this user has been let into the server automatically; please tell the bot admins to solve this mess.`);
+            await message.channel.send(`Error: Could not find the channel with ID ${client.config.oauth.botAuthLoggingChannelID} to log that this user has been let into the server; please tell the bot admins to solve this mess.`);
             return;
         }
         await redditEmbed.sendRedditUserEmbed(  loggingChannel,                     // Channel
-                                    discordUser,                        // Discord user
+                                    guildMember,                        // Discord user
                                     redditUsername,                     // Reddit username
                                     colourInfo,                         // colourInfo (specified in config.js)
                                     karma,                              // Reddit karma
                                     age,                                // Reddit account age
-                                    `User was let in automatically`,    // Title
-                                    `${discordUser}\n[/u/${redditUsername}](https://www.reddit.com/u/${redditUsername})`); // Description
+                                    embedTitleString,                   // Title
+                                    `${guildMember}\n[/u/${redditUsername}](https://www.reddit.com/u/${redditUsername})`); // Description
 
         // Welcome the person in their colour general channel
         // Get the colour general channel
@@ -146,7 +169,7 @@ module.exports = {
             await loggingChannel.send(`Error: Could not load the welcome message to welcome user in ${colourGeneralChannel}.`);
             return;
         }
-        welcomeMessage = welcomeMessage.replace("{{user}}", discordUser);
+        welcomeMessage = welcomeMessage.replace("{{user}}", guildMember);
         welcomeMessage = welcomeMessage.replace("{{colour}}", flair);
         // Append the server link if the colour has any
         const colourServerInviteLink = client.config.flairInfo[flair.toLowerCase()].serverInvite;
@@ -156,18 +179,6 @@ module.exports = {
         welcomeMessage = `${welcomeMessage}\n${welcomeRole}`;
         // Send the welcome message
         await colourGeneralChannel.send(welcomeMessage);
-    },
-    authFailure: async function (client, r, authReq, response, state) {
-        const userID = Buffer.from(state, 'base64').toString('ascii');
-        const message = authReq.get(userID);
-        authReq.delete(userID);
-
-        if (!message) {
-            const user = await client.fetchUser(userID);
-            user.send("The authentication wasn't successful. Try to do the command again or contact any human (mini)mod to get your role assigned.");
-        } else {
-            message.reply("The authentication wasn't successful.");
-        }
     }
 };
 
