@@ -2,8 +2,73 @@ const { RichEmbed } = require('discord.js');
 const redditEmbed = require('../functions/redditEmbed.js');
 const redditFlair = require('../functions/redditFlair.js');
 
+// This is separated into its own function because it's used in here and when a mini/mod lets a person in
+const letUserIn = async function (client, message, guildMember, colourRole, colourInfo, redditUsername, karma, age, embedTitleString) {
+    // Assign the colour and take the No Role
+    const noRoleRole = message.guild.roles.find(role => role.name === client.config.defaultSettings.noRole);
+    await guildMember.addRole(colourRole);
+    await guildMember.removeRole(noRoleRole);
+    // Give Blues the Freedmen role too
+    if (colourRole.name === 'Blue') {
+        const freedmenRole = message.guild.roles.find(role => role.name === 'Freedmen');
+        if (freedmenRole) {
+            await guildMember.addRole(freedmenRole);
+        }
+    }
+
+    const flair = colourInfo.name;
+    // If no title string is supplied, say that the user was let in automatically in the embed title
+    embedTitleString = embedTitleString ? embedTitleString : `User was let in automatically`;
+
+    // Send the embed to the logging channel that the user was let in automatically
+    const loggingChannel = message.guild.channels.get(client.config.oauth.botAuthLoggingChannelID);
+    if (!loggingChannel) {
+        await message.channel.send(`Error: Could not find the channel with ID ${client.config.oauth.botAuthLoggingChannelID} to log that this user has been let into the server; please tell the bot admins to solve this mess.`);
+        return;
+    }
+    await redditEmbed.sendRedditUserEmbed(  loggingChannel,                     // Channel
+                                guildMember,                        // Discord user
+                                redditUsername,                     // Reddit username
+                                colourInfo,                         // colourInfo (specified in config.js)
+                                karma,                              // Reddit karma
+                                age,                                // Reddit account age
+                                embedTitleString,                   // Title
+                                `${guildMember}\n[/u/${redditUsername}](https://www.reddit.com/u/${redditUsername})`); // Description
+
+    // Welcome the person in their colour general channel
+    // Get the colour general channel
+    const colourGeneralChannel = message.guild.channels.find(channel => channel.name === `${flair.toLowerCase()}-general`);
+    if (!colourGeneralChannel) {
+        await loggingChannel.send(`Error: Could not find the channel with name ${flair.toLowerCase()}-general welcome this user to their colour.`);
+        return;
+    }
+    // Get welcome role
+    const welcomeRole = message.guild.roles.get(client.config.oauth.welcomeRoleID);
+    if (!welcomeRole) {
+        await loggingChannel.send(`Error: Could not find the welcome role with ID: ${client.config.oauth.welcomeRoleID}.`);
+        return;
+    }
+    // Get the welcome message
+    var welcomeMessage = client.config.oauth.welcomeMessage;
+    if (!welcomeMessage) {
+        await loggingChannel.send(`Error: Could not load the welcome message to welcome user in ${colourGeneralChannel}.`);
+        return;
+    }
+    welcomeMessage = welcomeMessage.replace("{{user}}", guildMember);
+    welcomeMessage = welcomeMessage.replace("{{colour}}", flair);
+    // Append the server link if the colour has any
+    const colourServerInviteLink = client.config.flairInfo[flair.toLowerCase()].serverInvite;
+    if (colourServerInviteLink) {
+        welcomeMessage = welcomeMessage + ` and don't forget to join the ${flair} server: ${colourServerInviteLink}!`;
+    }
+    welcomeMessage = `${welcomeMessage}\n${welcomeRole}`;
+    // Send the welcome message
+    await colourGeneralChannel.send(welcomeMessage);
+};
+
 /*
- * Is launched from the ../oauth/server.js after the authentication request is intercepted
+ * Exported functions.
+ * This is launched from the ../oauth/server.js after the authentication request is intercepted
  */
 module.exports = {
     authSuccess: async function (client, r, authReq, response, state) {
@@ -119,68 +184,4 @@ module.exports = {
     },
     // This should call the function defined below; need to store it in a variable so that I can access it from the same file (and from a different file as well)
     letUserIn
-};
-
-// This is separated into its own function because it's used in here and when a mini/mod lets a person in
-const letUserIn = async function (client, message, guildMember, colourRole, colourInfo, redditUsername, karma, age, embedTitleString) {
-    // Assign the colour and take the No Role
-    const noRoleRole = message.guild.roles.find(role => role.name === client.config.defaultSettings.noRole);
-    await guildMember.addRole(colourRole);
-    await guildMember.removeRole(noRoleRole);
-    // Give Blues the Freedmen role too
-    if (colourRole.name === 'Blue') {
-        const freedmenRole = message.guild.roles.find(role => role.name === 'Freedmen');
-        if (freedmenRole) {
-            await guildMember.addRole(freedmenRole);
-        }
-    }
-
-    const flair = colourInfo.name;
-    // If no title string is supplied, say that the user was let in automatically in the embed title
-    embedTitleString = embedTitleString ? embedTitleString : `User was let in automatically`;
-
-    // Send the embed to the logging channel that the user was let in automatically
-    const loggingChannel = message.guild.channels.get(client.config.oauth.botAuthLoggingChannelID);
-    if (!loggingChannel) {
-        await message.channel.send(`Error: Could not find the channel with ID ${client.config.oauth.botAuthLoggingChannelID} to log that this user has been let into the server; please tell the bot admins to solve this mess.`);
-        return;
-    }
-    await redditEmbed.sendRedditUserEmbed(  loggingChannel,                     // Channel
-                                guildMember,                        // Discord user
-                                redditUsername,                     // Reddit username
-                                colourInfo,                         // colourInfo (specified in config.js)
-                                karma,                              // Reddit karma
-                                age,                                // Reddit account age
-                                embedTitleString,                   // Title
-                                `${guildMember}\n[/u/${redditUsername}](https://www.reddit.com/u/${redditUsername})`); // Description
-
-    // Welcome the person in their colour general channel
-    // Get the colour general channel
-    const colourGeneralChannel = message.guild.channels.find(channel => channel.name === `${flair.toLowerCase()}-general`);
-    if (!colourGeneralChannel) {
-        await loggingChannel.send(`Error: Could not find the channel with name ${flair.toLowerCase()}-general welcome this user to their colour.`);
-        return;
-    }
-    // Get welcome role
-    const welcomeRole = message.guild.roles.get(client.config.oauth.welcomeRoleID);
-    if (!welcomeRole) {
-        await loggingChannel.send(`Error: Could not find the welcome role with ID: ${client.config.oauth.welcomeRoleID}.`);
-        return;
-    }
-    // Get the welcome message
-    var welcomeMessage = client.config.oauth.welcomeMessage;
-    if (!welcomeMessage) {
-        await loggingChannel.send(`Error: Could not load the welcome message to welcome user in ${colourGeneralChannel}.`);
-        return;
-    }
-    welcomeMessage = welcomeMessage.replace("{{user}}", guildMember);
-    welcomeMessage = welcomeMessage.replace("{{colour}}", flair);
-    // Append the server link if the colour has any
-    const colourServerInviteLink = client.config.flairInfo[flair.toLowerCase()].serverInvite;
-    if (colourServerInviteLink) {
-        welcomeMessage = welcomeMessage + ` and don't forget to join the ${flair} server: ${colourServerInviteLink}!`;
-    }
-    welcomeMessage = `${welcomeMessage}\n${welcomeRole}`;
-    // Send the welcome message
-    await colourGeneralChannel.send(welcomeMessage);
 };
