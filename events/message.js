@@ -26,8 +26,8 @@ module.exports = async (client, r, unbClient, userCooldowns, globalCooldowns, au
     }
 
     // If the bot is mentioned in another message, add :suspEyes: reaction for fun
-    if (message.content.includes(mention)) {
-        return message.react('541887773729226763');    // :suspEyes:
+    if (message.content.match(new RegExp(`^(.)*${mention}(.)*$`))) {
+        return await message.react('541887773729226763');    // :suspEyes:
     }
 
     // Also good practice to ignore any message that does not start with our prefix,
