@@ -19,9 +19,15 @@ module.exports = async (client, r, unbClient, userCooldowns, globalCooldowns, au
     const settings = message.settings = client.getSettings(message.guild.id);
 
     // Checks if the bot was mentioned, with no message after it, returns the prefix.
-    const prefixMention = new RegExp(`^<@!?${client.user.id}>( |)$`);
+    const mention = `<@!?${client.user.id}>`;
+    const prefixMention = new RegExp(`^${mention}( |)$`);
     if (message.content.match(prefixMention)) {
         return message.reply(`My prefix on this guild is \`${settings.prefix}\``);
+    }
+
+    // If the bot is mentioned in another message, add :suspEyes: reaction for fun
+    if (message.content.includes(mention)) {
+        return message.react('541887773729226763');    // :suspEyes:
     }
 
     // Also good practice to ignore any message that does not start with our prefix,

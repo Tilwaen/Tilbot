@@ -182,6 +182,6 @@ module.exports = {
             message.reply("The authentication wasn't successful.");
         }
     },
-    // This should call the function defined below; need to store it in a variable so that I can access it from the same file (and from a different file as well)
+    // This should call the function defined above; need to store it in a variable so that I can access it from the same file (and from a different file as well)
     letUserIn
 };
