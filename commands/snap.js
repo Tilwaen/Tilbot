@@ -2,11 +2,12 @@ exports.run = async (client, message, args, level, r, unbClient) => {
     var member = message.mentions.members.first();
     member = member ? member : message.member;
 
-    const snapped = member.user.id % 2 === 0;
+    // Snowflake ID is parsed as string for whatever reason - take only its last number
+    const snapped = (member.user.id[member.user.id.length - 1] % 2) === 0;
 
     const snappedMessage = snapped
-                            ? `${member.user.username} was **SPARED**`
-                            : `${member.user.username} was **SNAPPED**`;
+                            ? `${member.user.username} was **SNAPPED**`
+                            : `${member.user.username} was **SPARED**`;
 
     await message.channel.send(snappedMessage);
 };
