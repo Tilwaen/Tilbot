@@ -29,6 +29,7 @@ exports.run = async (client, message, args, level, r, unbClient) => {
             case "oil":
             case "main":
             case "flairwars":
+            case "void":
                 return flairInfo["mod"].subreddit;
             case "law":
             case "laws":
