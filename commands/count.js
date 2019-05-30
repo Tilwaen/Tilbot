@@ -19,7 +19,7 @@ exports.run = async (client, message, args, level, r, unbClient) => {
     } else if (args[0].toLowerCase() === "pink") {
         colourSubreddit = client.config.flairInfo["orange"].subreddit;
     } else {
-        await message.channel.send("Wrong syntax. The syntax is \`~count colour\`");
+        await message.channel.send("Wrong syntax. The syntax is \`~count [colour]\`");
         return;
     }
 
@@ -102,5 +102,5 @@ exports.help = {
   name: "count",
   category: "Flairwars",
   description: "Counts number of posts per hot page for the given colour subreddit. 30 seconds global cooldown.",
-  usage: "count <colour>"
+  usage: "count [colour]"
 };
