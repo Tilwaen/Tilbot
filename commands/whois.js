@@ -35,7 +35,7 @@ exports.run = async (client, message, args, level, r, unbClient) => {
     // The Reddit account most probably won't match if the user doesn't have a nickname; send only Discord info
     if (!member.nickname) {
         await message.channel.send(`User ${member.user.username} doesn't have a nickname - sending Discord info only.`);
-        await sendDiscordEmbed(message.channel, member);
+        await sendDiscordEmbed(client, message.channel, member);
         return;
     }
 
@@ -83,11 +83,13 @@ async function sendRedditUserEmbed(channel, username, colourInfo, karma, redditA
         embed.setDescription(`${discordMember}`);
     }
 
+    const roles = Array.from(discordMember.roles, ([id, role]) => role)    // Map the map values to an array
+                                                                .filter(role => role.id !== discordMember.guild.id) // Filter out everyone role
+                                                                .join(' ');
+
     embed.addField("Discord account created", discordMember.user.createdAt.toDateString(), true)
         .addField("Joined this server", discordMember.joinedAt.toDateString(), true)
-        .addField("Roles", Array.from(discordMember.roles, ([id, role]) => role)    // Map the map values to an array
-                                                                .filter(role => role.id !== discordMember.guild.id) // Filter out everyone role
-                                                                .join(' '));
+        .addField("Roles", roles ? roles : "No roles assigned");
 
     await channel.send({ embed });
 };
