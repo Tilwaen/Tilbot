@@ -1,3 +1,5 @@
+const util = require('../functions/util.js');
+
 exports.run = async (client, message, args, level, r, unbClient) => {
     // No arguments passed
     if (args.length === 0) {
@@ -5,9 +7,7 @@ exports.run = async (client, message, args, level, r, unbClient) => {
         return;
     }
 
-    // Filter out the prefix and command name (can be of different length because of the command aliases)
-    const regex = /^~\w+ /g;
-    const text = message.content.split(regex).filter(Boolean)[0];
+    const text = util.getMessageArgumentContent(message);
 
     // It will be a spamfest, but it doesn't need to be *that* large spamfest
     if (text.length > 20) {
