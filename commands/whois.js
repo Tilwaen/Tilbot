@@ -49,7 +49,7 @@ exports.run = async (client, message, args, level, r, unbClient) => {
         redditUser = await r.getUser(username).fetch();
     } catch (error) {
         message.channel.send(`This is not a valid Reddit account: https://www.reddit.com/u/${username}; sending Discord info only.`);
-        await sendDiscordEmbed(message.channel, member);
+        await sendDiscordEmbed(client, message.channel, member);
         return;
     };
 
@@ -63,8 +63,8 @@ exports.run = async (client, message, args, level, r, unbClient) => {
     await sendRedditUserEmbed(message.channel, username, colourInfo, karma, redditAge, member, true);
 };
 
-async function sendDiscordEmbed(channel, discordMember) {
-    await sendRedditUserEmbed(channel, "", "None", 0, 0, discordMember, false);
+async function sendDiscordEmbed(client, channel, discordMember) {
+    await sendRedditUserEmbed(channel, "", redditFlair.getColourInfoFromFlair(client, "None"), 0, 0, discordMember, false);
 }
 
 async function sendRedditUserEmbed(channel, username, colourInfo, karma, redditAge, discordMember, sendRedditInfo) {
