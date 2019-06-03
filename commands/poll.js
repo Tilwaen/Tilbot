@@ -93,6 +93,6 @@ exports.conf = {
 exports.help = {
   name: "poll",
   category: "Miscelaneous",
-  description: "Poll time!",
-  usage: "poll"
+  description: "Reacts to your message with up/down/shrug, or creates a multichoice poll.",
+  usage: "poll (for simple poll) | poll {title} [option1] [option2] [...]"
 };
