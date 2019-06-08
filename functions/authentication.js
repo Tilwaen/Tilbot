@@ -59,7 +59,7 @@ const letUserIn = async function (client, message, guildMember, colourRole, colo
     // Append the server link if the colour has any
     const colourServerInviteLink = client.config.flairInfo[flair.toLowerCase()].serverInvite;
     if (colourServerInviteLink) {
-        welcomeMessage = welcomeMessage + ` and don't forget to join the ${flair} server: ${colourServerInviteLink}!`;
+        welcomeMessage = welcomeMessage + ` and don't forget to join the ${flair} server: <${colourServerInviteLink}>!`;
     }
     welcomeMessage = `${welcomeMessage}\n${welcomeRole}`;
     // Send the welcome message
@@ -117,7 +117,7 @@ module.exports = {
         }
 
         if (flair === 'Mod' || flair === 'Ex Mod') {
-            await message.reply(`Welcome back <3 I can't give you your roles. Wait for a human, please.`);
+            await message.reply(`welcome back <3 I can't give you your roles. Wait for a human, please.`);
             return;
         }
 
