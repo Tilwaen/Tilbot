@@ -4,7 +4,7 @@ exports.run = async (client, message, args, level, r, unbClient) => {
                                     .filter(role => !message.guild.members                                          // no such role that...
                                                         .some(member => member.roles.has(role.id)                   // any user would have this role...
                                                                         && (member.user.id !== 391963807771000843   // unless the user is (SSeptic || boopis)
-                                                                            || member.user.id !== 476536649074081802)));
+                                                                            && member.user.id !== 476536649074081802)));
     await message.reply(`Number of unused roles: ${unusedRoles.size}\n${unusedRoles.map(role => role.name).join('\n')}`);
 };
 
