@@ -31,7 +31,6 @@ exports.run = async (client, message, args, level, r, unbClient) => {
 
     await pollMsg.react("👍");   // up
     await pollMsg.react("👎");   // down
-    await pollMsg.react("🤷");   // shrug
 
     await message.delete();
 };
