@@ -1,5 +1,6 @@
 const fetch = require("node-fetch");
 const { RichEmbed } = require('discord.js');
+const util = require('../functions/util.js');
 
 module.exports = {
     /**
@@ -9,7 +10,7 @@ module.exports = {
      * @return {String} URL of the image
      */
     getSubredditImage: async function(r, subredditNameArray) {
-        const subredditChoice = getRandomEntry(subredditNameArray);
+        const subredditChoice = util.getRandomEntry(subredditNameArray);
 
         // Try to fetch random submission first, not dependent on the hot page
         const limit = 10;
@@ -26,7 +27,7 @@ module.exports = {
         const json = await data.json();
         const posts = json.data.children;
         const allowedPosts = posts.filter(post => !post.data.over_18 && post.data.post_hint === 'image')
-        const randomPost = getRandomEntry(allowedPosts);
+        const randomPost = util.getRandomEntry(allowedPosts);
         return randomPost.data.url;
     },
 
@@ -37,7 +38,7 @@ module.exports = {
      * @return {{title: title, author: author, url: imageUrl}}
      */
     getSubredditImagePost: async function(r, subredditNameArray) {
-        const subredditChoice = getRandomEntry(subredditNameArray);
+        const subredditChoice = util.getRandomEntry(subredditNameArray);
 
         // Try to fetch random submission first, not dependent on the hot page
         const limit = 10;
@@ -54,7 +55,7 @@ module.exports = {
         const json = await data.json();
         const posts = json.data.children;
         const allowedPosts = posts.filter(post => !post.data.over_18 && post.data.post_hint === 'image')
-        const randomPost = getRandomEntry(allowedPosts);
+        const randomPost = util.getRandomEntry(allowedPosts);
         return { title: randomPost.data.title, author: randomPost.data.author, url: randomPost.data.url };
     },
 
@@ -79,8 +80,3 @@ module.exports = {
         let msg = await channel.send({ embed });
     }
 };
-
-function getRandomEntry(collection) {
-    const index = Math.floor(Math.random() * collection.length);
-    return collection[index];
-}
