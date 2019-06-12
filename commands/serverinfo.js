@@ -19,8 +19,11 @@ exports.run = async (client, message, args, level, r, unbClient) => {
         .addField("Humans", guild.members.filter(member => !member.user.bot).size, true)
         .addField("Bots", guild.members.filter(member => member.user.bot).size, true)
         .addField("Online", guild.members.filter(member => member.presence.status === 'online').size, true)
-        .addField("Roles", guild.roles.size, true);
-        //.addField("Moderators", guild.members.filter(member => member.roles.find(role => role.)));
+        .addField("Roles", guild.roles.size, true)
+        .addField("Moderators", Array.from(guild.members
+                                            .filter(member => member.roles.find(role => role.name === client.config.defaultSettings.adminRole)) // Filter mods
+                                            .values())  // Convert the map values to an array
+                                        .join('\n'));   // Join the array values by a newline to print them out nicely
 
     await message.channel.send({ embed });
 };
