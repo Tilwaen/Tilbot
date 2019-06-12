@@ -39,6 +39,6 @@ exports.conf = {
 exports.help = {
   name: "avatar",
   category: "Miscelaneous",
-  description: "Posts the server icon.",
+  description: "Displays the avatar of the user.",
   usage: "avatar <user>"
 };
