@@ -9,7 +9,7 @@ exports.conf = {
   guildOnly: true,
   aliases: ["serveravatar", "serverpfp"],
   permLevel: "User",
-  channelPerms: "All",
+  channelPerms: "Fun",
   userCooldown: false,
   globalCooldown: false,
   cooldownDuration: 0
@@ -18,6 +18,6 @@ exports.conf = {
 exports.help = {
   name: "servericon",
   category: "Miscelaneous",
-  description: "Posts the server icon",
+  description: "Posts the server icon.",
   usage: "servericon"
 };
