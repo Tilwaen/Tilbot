@@ -25,13 +25,27 @@ exports.run = async (client, message, args, level, r, unbClient) => {
 
     // Kick the users if running in the live mode
     if (runInLiveMode) {
-        console.log("Running in live mode, kicking users.");
-        const msg3 = await message.channel.send(`Running in live mode, kicking users.`);
-        await filteredMembers.forEach(function(member) {
+        await message.reply("kick users? Confirm with 'y':");
+
+        // The author of the message needs to confirm the selection
+        const filter = response => {
+            return response.author === message.author && response.content.toLowerCase() === 'y';
+        }
+
+        try {
+            const collected = await message.channel.awaitMessages(filter, { maxMatches: 1, time: 120000, errors: ['time'] });
+            await message.channel.send(`Kicking users. Bots will not be kicked.`);
+            await filteredMembers.forEach(member => {
             if (!member.kickable) return message.reply(`I cannot kick member ${member}`);
+            if (member.user.bot) return message.reply(`${member} is a bot, I will not kick it`);
             console.log(`Kicking ${member}`);
             member.kick("Purge of users with no role assigned");
         });
+        } catch (time) {
+            await message.channel.send('Time out, no users will be kicked.');
+            return;
+        }
+        
     } else {
         console.log("Running in test mode, no users were kicked.");
         const msg3 = await message.channel.send(`Running in test mode, no users were kicked.`);
