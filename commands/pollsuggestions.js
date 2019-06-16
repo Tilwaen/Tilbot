@@ -10,6 +10,8 @@ exports.run = async (client, message, args, level, r, unbClient) => {
                                     ? parseInt(args[0])
                                     : 0;
 
+    const infoMsg = await message.channel.send("Number of excluded suggestions: " + numOfExcludedMessages);
+
     const suggestConfig = client.config.suggestions;
     const suggestionPollChannel = message.guild.channels.get(suggestConfig.pollChannelID);
     const suggestionModPollChannel = message.guild.channels.get(suggestConfig.modPollChannelID);
@@ -23,7 +25,7 @@ exports.run = async (client, message, args, level, r, unbClient) => {
     // Create an array from the map of messages (used to be [id, message])
     suggestions = [ ...suggestions.values() ];
     // Exclude a number of messages specified in an argument
-    suggestions.slice(numOfExcludedMessages, suggestions);
+    suggestions = suggestions.slice(numOfExcludedMessages);
     // and reverese it so that the oldest suggestions go first
     suggestions.reverse();
 
@@ -64,6 +66,7 @@ exports.run = async (client, message, args, level, r, unbClient) => {
         await suggestion.edit(embed);
     }
 
+    await infoMsg.delete();
     await message.react('👌');   // :ok_hand:
 };
 
