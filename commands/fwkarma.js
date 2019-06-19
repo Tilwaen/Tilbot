@@ -75,9 +75,9 @@ exports.run = async (client, message, args, level, r, unbClient) => {
     embed
         .addBlankField()
         .addField(`Total`,
-`Total number of Flairwars posts: ${fwRelated.posts.length}${fwRelated.posts.length > 0 ? ` (${getPerc(fwRelated.posts.length, userPosts.length)}% of all posts)` : ""}
+`Total number of Flairwars posts: ${fwRelated.posts.length}/${userPosts.length}${fwRelated.posts.length > 0 ? ` (${getPerc(fwRelated.posts.length, userPosts.length)}% of all posts)` : ""}
 Total Flairwars post score: ${postKarma}${postKarma > 0 ? ` (${getPerc(postKarma, totalKarma)}% of all score)` : ""}
-Total number of Flairwars comments: ${fwRelated.comments.length}${fwRelated.comments.length > 0 ? ` (${getPerc(fwRelated.comments.length, userComments.length)}% of all comments)` : ""}
+Total number of Flairwars comments: ${fwRelated.comments.length}/${userComments.length}${fwRelated.comments.length > 0 ? ` (${getPerc(fwRelated.comments.length, userComments.length)}% of all comments)` : ""}
 Total Flairwars comment score: ${commentKarma}${commentKarma > 0 ? ` (${getPerc(commentKarma, totalKarma)}% of all score)` : ""}
 Total Flairwars post and comment score summed: ${fwRelated.postKarma + fwRelated.commentKarma}
 Total post score from all the Reddit posts: ${totalScore}
