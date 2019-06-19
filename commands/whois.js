@@ -60,14 +60,16 @@ exports.run = async (client, message, args, level, r, unbClient) => {
     let accountCreated = redditUser.created_utc;
     let redditAge = new Date(accountCreated * 1000).toDateString();
 
-    await sendRedditUserEmbed(message.channel, username, colourInfo, karma, redditAge, member, true);
+    const trophies = await redditUser.getTrophies();
+
+    await sendRedditUserEmbed(message.channel, username, colourInfo, karma, redditAge, trophies.trophies, member, true);
 };
 
 async function sendDiscordEmbed(client, channel, discordMember) {
     await sendRedditUserEmbed(channel, "", redditFlair.getColourInfoFromFlair(client, "None"), 0, 0, discordMember, false);
 }
 
-async function sendRedditUserEmbed(channel, username, colourInfo, karma, redditAge, discordMember, sendRedditInfo) {
+async function sendRedditUserEmbed(channel, username, colourInfo, karma, redditAge, trophies, discordMember, sendRedditInfo) {
     var embed = new RichEmbed()
         .setColor(colourInfo.colourHex)
         .setTitle(discordMember.user.tag)
@@ -81,6 +83,10 @@ async function sendRedditUserEmbed(channel, username, colourInfo, karma, redditA
             .setDescription(`${discordMember}\n[/u/${username}](https://www.reddit.com/u/${username})`);
     } else {
         embed.setDescription(`${discordMember}`);
+    }
+
+    if (trophies.length > 0) {
+        embed.addField("Trophies", trophies.map(trophy => trophy.name).join('\n'));
     }
 
     const roles = Array.from(discordMember.roles, ([id, role]) => role)    // Map the map values to an array
