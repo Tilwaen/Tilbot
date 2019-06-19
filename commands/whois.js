@@ -1,34 +1,16 @@
 const { RichEmbed } = require('discord.js');
 const reddit = require('../functions/redditFunctions.js');
+const util = require('../functions/util.js');
 /**
  * Prints Reddit and Discord info about the mentioned user.
  * This command relies on each user having their server nicknames in the format of /u/RedditUsername
  */
 exports.run = async (client, message, args, level, r, unbClient) => {
 
-    // If there is no argument, take the author of the message, otherwise take the first mention
-    var member = (args.length < 1) ? message.member : message.mentions.members.first();
-
-    // No mention
+    const member = util.getGuildMemberFromArg(message, args);
     if (!member) {
-        // Find the corresponding guild member nickname
-        /*guildMemberMatch = message.guild.members.find(m => {
-            // There needs to be a condition because the user doesn't need to have a nickname
-            if (m.nickname) m.nickname.toLowerCase().includes(args[0].toLowerCase())
-        });*/
-        guildMemberMatch = message.guild.members
-                .filter(m => m.nickname)
-                .find(m => m.nickname.toLowerCase().includes(args[0].toLowerCase()));
-        member = guildMemberMatch;
-        if (!guildMemberMatch) {
-            // Find the corresponding user Discord username
-            discordUsernameMatch = message.guild.members.find(m => m.user.username.toLowerCase().includes(args[0].toLowerCase()));
-            member = discordUsernameMatch;
-            if (!discordUsernameMatch) {
-                message.channel.send(`Cannot find member with username ${args[0]} on this Discord server.`);
-                return;
-            }
-        }
+        message.channel.send(`Cannot find member with username ${args[0]} on this Discord server.`);
+        return;
     }
 
     // The Reddit account most probably won't match if the user doesn't have a nickname; send only Discord info

@@ -8,5 +8,24 @@ module.exports = {
     getRandomEntry: function(collection) {
         const index = Math.floor(Math.random() * collection.length);
         return collection[index];
+    },
+    getGuildMemberFromArg: function(message, args) {
+        // If there is no argument, take the author of the message, otherwise take the first mention
+        var member = (args.length < 1) ? message.member : message.mentions.members.first();
+
+        // No mention
+        if (!member) {
+            guildMemberMatch = message.guild.members
+                    .filter(m => m.nickname)
+                    .find(m => m.nickname.toLowerCase().includes(args[0].toLowerCase()));
+            member = guildMemberMatch;
+            if (!guildMemberMatch) {
+                // Find the corresponding user Discord username
+                discordUsernameMatch = message.guild.members.find(m => m.user.username.toLowerCase().includes(args[0].toLowerCase()));
+                member = discordUsernameMatch;
+            }
+        }
+
+        return member;
     }
 };
