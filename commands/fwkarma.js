@@ -59,6 +59,14 @@ exports.run = async (client, message, args, level, r, unbClient) => {
         embed.addField(`${colour}`, computeStats(posts, comments, userPosts, userComments, totalKarma, fwRelated));
     });
 
+    const otherSubredditsPosts = userPosts.filter(post => client.config.relatedSubreddits
+                                                                        .map(subreddit => subreddit.toLowerCase())
+                                                                        .indexOf(post.subreddit.toLowerCase()) > -1);
+    const otherSubredditsComments = userComments.filter(comment => client.config.relatedSubreddits
+                                                                        .map(subreddit => subreddit.toLowerCase())
+                                                                        .indexOf(comment.subreddit.toLowerCase()) > -1);
+    embed.addField(`Other related FW subreddits`, computeStats(otherSubredditsPosts, otherSubredditsComments, userPosts, userComments, totalKarma, fwRelated));
+
     embed
         .addBlankField()
         .addField(`Total`, computeStats(fwRelated.posts, fwRelated.comments, userPosts, userComments, totalKarma, fwRelated, true));
@@ -69,7 +77,7 @@ exports.run = async (client, message, args, level, r, unbClient) => {
 };
 
 function getSubmissions(arrayOfPosts, subreddit) {
-    return arrayOfPosts.filter(post => post.subreddit === subreddit);
+    return arrayOfPosts.filter(post => post.subreddit.toLowerCase() === subreddit.toLowerCase());
 };
 
 function getKarma(arrayOfPosts) {
