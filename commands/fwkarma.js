@@ -69,9 +69,19 @@ exports.run = async (client, message, args, level, r, unbClient) => {
                                                                         .indexOf(comment.subreddit.toLowerCase()) > -1);
     embed.addField(`Other related FW subreddits`, computeStats(otherSubredditsPosts, otherSubredditsComments, userPosts, userComments, totalScore, fwRelated));
 
+    const postKarma = getKarma(fwRelated.posts);
+    const commentKarma = getKarma(fwRelated.comments);
+
     embed
         .addBlankField()
-        .addField(`Total`, computeStats(fwRelated.posts, fwRelated.comments, userPosts, userComments, totalScore, fwRelated, true) + `\nTotal FW post score: ${fwRelated.postKarma + fwRelated.commentKarma}\nTotal post score from all the Reddit posts: ${totalScore}\nDisplayed user karma (computed from the score): ${totalKarma}`);
+        .addField(`Total`,
+`Total number of Flairwars posts: ${fwRelated.posts.length}${fwRelated.posts.length > 0 ? ` (${getPerc(fwRelated.posts.length, userPosts.length)}% of all posts)` : ""}
+Total Flairwars post score: ${postKarma}${postKarma > 0 ? ` (${getPerc(postKarma, totalKarma)}% of all score)` : ""}
+Total number of Flairwars comments: ${fwRelated.comments.length}${fwRelated.comments.length > 0 ? ` (${getPerc(fwRelated.comments.length, userComments.length)}% of all comments)` : ""}
+Total Flairwars comment score: ${commentKarma}${commentKarma > 0 ? ` (${getPerc(commentKarma, totalKarma)}% of all score)` : ""}
+Total Flairwars post and comment score summed: ${fwRelated.postKarma + fwRelated.commentKarma}
+Total post score from all the Reddit posts: ${totalScore}
+Displayed user karma (computed from the score): ${totalKarma}`);
 
     msg = await msg.edit({ embed });
 };
@@ -89,33 +99,27 @@ function getPerc(value, totalValue) {
     return result > 10 ? `**${result}**` : `${result}`;
 };
 
-function computeStats(posts, comments, userPosts, userComments, totalKarma, fwRelated, final) {
+function computeStats(posts, comments, userPosts, userComments, totalKarma, fwRelated) {
     var postKarma, commentKarma;
 
-    if (!final) {
-        postKarma = getKarma(posts);
-        commentKarma = getKarma(comments);
+    postKarma = getKarma(posts);
+    commentKarma = getKarma(comments);
 
-        console.log(fwRelated.posts.length);
-        fwRelated.posts = fwRelated.posts.concat(posts);
-        fwRelated.comments = fwRelated.comments.concat(comments);
-        fwRelated.postKarma += postKarma;
-        fwRelated.commentKarma += commentKarma;
-    } else {
-        postKarma = fwRelated.postKarma;
-        commentKarma = fwRelated.commentKarma;
-    }
+    fwRelated.posts = fwRelated.posts.concat(posts);
+    fwRelated.comments = fwRelated.comments.concat(comments);
+    fwRelated.postKarma += postKarma;
+    fwRelated.commentKarma += commentKarma;
 
-    return `Posts: ${posts.length}${posts.length > 0 ? ` (${getPerc(posts.length, userPosts.length)}% of posts)` : ""}
-Post karma: ${postKarma}${postKarma > 0 ? ` (${getPerc(postKarma, totalKarma)}% of karma)` : ""}
-Comments: ${comments.length}${comments.length > 0 ? ` (${getPerc(comments.length, userComments.length)}% of comments)` : ""}
-Comment karma: ${commentKarma}${commentKarma > 0 ? ` (${getPerc(commentKarma, totalKarma)}% of karma)` : ""}`;
+    return `Posts: ${posts.length}${posts.length > 0 ? ` (${getPerc(posts.length, userPosts.length)}% of all posts)` : ""}
+Post score: ${postKarma}${postKarma > 0 ? ` (${getPerc(postKarma, totalKarma)}% of all score)` : ""}
+Comments: ${comments.length}${comments.length > 0 ? ` (${getPerc(comments.length, userComments.length)}% of all comments)` : ""}
+Comment score: ${commentKarma}${commentKarma > 0 ? ` (${getPerc(commentKarma, totalKarma)}% of all score)` : ""}`;
 };
 
 exports.conf = {
   enabled: true,
   guildOnly: true,
-  aliases: ["karma", "posts", "fwposts"],
+  aliases: ["karma", "posts", "fwposts", "fwinfo", "fwscore", "score"],
   permLevel: "User",
   channelPerms: "Fun",
   userCooldown: false,
