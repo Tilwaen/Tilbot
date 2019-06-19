@@ -20,12 +20,16 @@ exports.run = async (client, message, args, level, r, unbClient) => {
     // Send the auth link to their DMs
     const usernameBase64 = Buffer.from(message.author.id).toString('base64');
     try {
-        message.author.send(`Please authenticate your Reddit account through the link below. **We do not gain any sensitive data about your account**, all we do is verify that you're not claiming to be someone else.\n\nhttps://www.reddit.com/api/v1/authorize?client_id=${client.config.redditAuth.clientID}&response_type=code&state=${usernameBase64}&redirect_uri=${client.config.oauth.redirectUri}&duration=temporary&scope=identity`);
+        await message.author.send(`Please authenticate your Reddit account through the link below. **We do not gain any sensitive data about your account**, all we do is verify that you're not claiming to be someone else.\n\nhttps://www.reddit.com/api/v1/authorize?client_id=${client.config.redditAuth.clientID}&response_type=code&state=${usernameBase64}&redirect_uri=${client.config.oauth.redirectUri}&duration=temporary&scope=identity`);
     } catch (e) {
-        message.reply("I need to send you something, but I'm not able to reach your private messages. Please check your Discord account settings and make sure that people who are not in your friend list can message you. Just this one time, just for me. Then you can revert the settings back and do the command again!");
+        if (e.name === 'DiscordAPIError' && e.code === 50007) {
+            await message.reply("I need to send you something, but I'm not able to reach your private messages. Please check your Discord account settings and make sure that people who are not in your friend list can message you. Just this one time, just for me. Then you can revert the settings back and do the command again!");
+        } else {
+            await message.channel.send(`There was an error when attempting to send you a private message. The bot owner should check the logs; get here, <@${client.config.ownerID}>!`);
+        }
         return;
     }
-    message.reply("check your DMs!");
+    await message.reply("check your DMs!");
 
     // Now we need to wait for the GET request from Reddit
     // See ../oauth/server.js for the server request interception
