@@ -1,6 +1,5 @@
 const { RichEmbed } = require('discord.js');
-const redditEmbed = require('../functions/redditEmbed.js');
-const redditFlair = require('../functions/redditFlair.js');
+const reddit = require('../functions/redditFunctions.js');
 /**
  * Prints Reddit and Discord info about the mentioned user.
  * This command relies on each user having their server nicknames in the format of /u/RedditUsername
@@ -53,8 +52,8 @@ exports.run = async (client, message, args, level, r, unbClient) => {
         return;
     };
 
-    let flair = await redditFlair.getFlair(r, username);
-    let colourInfo = redditFlair.getColourInfoFromFlair(client, flair);
+    let flair = await reddit.getFlair(r, username);
+    let colourInfo = reddit.getColourInfoFromFlair(client, flair);
     let karma = redditUser.link_karma + redditUser.comment_karma;
 
     let accountCreated = redditUser.created_utc;
@@ -66,7 +65,7 @@ exports.run = async (client, message, args, level, r, unbClient) => {
 };
 
 async function sendDiscordEmbed(client, channel, discordMember) {
-    await sendRedditUserEmbed(channel, "", redditFlair.getColourInfoFromFlair(client, "None"), 0, 0, discordMember, false);
+    await sendRedditUserEmbed(channel, "", reddit.getColourInfoFromFlair(client, "None"), 0, 0, discordMember, false);
 }
 
 async function sendRedditUserEmbed(channel, username, colourInfo, karma, redditAge, trophies, discordMember, sendRedditInfo) {

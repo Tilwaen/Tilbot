@@ -1,5 +1,4 @@
 const { RichEmbed } = require('discord.js');
-const redditEmbed = require('../functions/redditEmbed.js');
 
 exports.run = async (client, message, args, level, r, unbClient) => {
 

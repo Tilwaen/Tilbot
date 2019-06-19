@@ -1,6 +1,5 @@
 const authentication = require('../functions/authentication.js');
-const redditEmbed = require('../functions/redditEmbed.js');
-const redditFlair = require('../functions/redditFlair.js');
+const reddit = require('../functions/redditFunctions.js');
 
 exports.run = async (client, message, args, level, r, unbClient) => {
 
@@ -67,8 +66,8 @@ async function minimodLetUserIn(client, message, args, r) {
         return;
     };
 
-    const subredditFlair = await redditFlair.getFlair(r, redditUsername);
-    const colourInfo = redditFlair.getColourInfoFromFlair(client, subredditFlair);
+    const subredditFlair = await reddit.getFlair(r, redditUsername);
+    const colourInfo = reddit.getColourInfoFromFlair(client, subredditFlair);
     const flair = colourInfo.name;
 
     if (flair === 'None') {

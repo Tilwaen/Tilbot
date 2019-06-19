@@ -1,6 +1,5 @@
 const { RichEmbed } = require('discord.js');
-const redditEmbed = require('../functions/redditEmbed.js');
-const redditFlair = require('../functions/redditFlair.js');
+const reddit = require('../functions/redditFunctions.js');
 
 /**
  * Prints info about a specified Reddit account
@@ -26,26 +25,15 @@ exports.run = async (client, message, args, level, r, unbClient) => {
         return;
     };
 
-    let flair = await redditFlair.getFlair(r, username);
-    let colourInfo = redditFlair.getColourInfoFromFlair(client, flair);
+    let flair = await reddit.getFlair(r, username);
+    let colourInfo = reddit.getColourInfoFromFlair(client, flair);
     let karma = redditUser.link_karma + redditUser.comment_karma;
 
     let accountCreated = redditUser.created_utc;
     let age = new Date(accountCreated * 1000).toDateString();
 
-    sendRedditUserEmbed(message.channel, username, colourInfo, karma, age);
-};
-
-async function sendRedditUserEmbed(channel, username, colourInfo, karma, age) {
-    var embed = new RichEmbed()
-        .setColor(colourInfo.colourHex)
-        .setTitle("/u/" + username)
-        .setURL("https://www.reddit.com/u/" + username)
-        .setThumbnail(colourInfo.iconUrl)
-        .addField("Flair", colourInfo.name, true)
-        .addField("Account created", age, true)
-        .addField("Karma", karma, true)
-    await channel.send({ embed });
+    // channel, colourInfo, karma, age, title, description
+    reddit.sendRedditUserEmbed(message.channel, colourInfo, karma, age, "/u/" + username, `[/u/${username}](https://www.reddit.com/u/${username})`);
 };
 
 exports.conf = {

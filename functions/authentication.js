@@ -1,6 +1,5 @@
 const { RichEmbed } = require('discord.js');
-const redditEmbed = require('../functions/redditEmbed.js');
-const redditFlair = require('../functions/redditFlair.js');
+const reddit = require('../functions/redditFunctions.js');
 
 // This is separated into its own function because it's used in here and when a mini/mod lets a person in
 const letUserIn = async function (client, message, guildMember, colourRole, colourInfo, redditUsername, karma, age, embedTitleString) {
@@ -26,9 +25,7 @@ const letUserIn = async function (client, message, guildMember, colourRole, colo
         await message.channel.send(`Error: Could not find the channel with ID ${client.config.oauth.botAuthLoggingChannelID} to log that this user has been let into the server; please tell the bot admins to solve this mess.`);
         return;
     }
-    await redditEmbed.sendRedditUserEmbed(  loggingChannel,                     // Channel
-                                guildMember,                        // Discord user
-                                redditUsername,                     // Reddit username
+    await reddit.sendRedditUserEmbed(  loggingChannel,              // Channel
                                 colourInfo,                         // colourInfo (specified in config.js)
                                 karma,                              // Reddit karma
                                 age,                                // Reddit account age
@@ -90,15 +87,13 @@ module.exports = {
         const age = new Date(accountCreated * 1000).toDateString();
 
         // Get the user's flair
-        const flairInfo = await redditFlair.getFlair(r, redditUsername);
-        const colourInfo = redditFlair.getColourInfoFromFlair(client, flairInfo);
+        const flairInfo = await reddit.getFlair(r, redditUsername);
+        const colourInfo = reddit.getColourInfoFromFlair(client, flairInfo);
         const flair = colourInfo.name;
 
         // Send the user info embed to the channel where the user did the command
-        await redditEmbed.sendRedditUserEmbed(
+        await reddit.sendRedditUserEmbed(
                 message.channel,
-                discordUser,
-                redditUsername,
                 colourInfo,
                 karma,
                 age,
@@ -143,9 +138,7 @@ module.exports = {
                 await message.channel.send(`Error: Could not find the channel with ID ${client.config.oauth.needRolesChannelID} to log this event and notify the minimods that this user needs their attention; please tell the bot admins to solve this mess.`);
                 return;
             }
-            await redditEmbed.sendRedditUserEmbed(  needRoleChannel,    // Channel
-                                                    discordUser,        // Discord user
-                                                    redditUsername,     // Reddit username
+            await reddit.sendRedditUserEmbed(  needRoleChannel,    // Channel
                                                     colourInfo,         // ColourInfo (specified in config.js)
                                                     karma,              // Reddit karma
                                                     age,                // Reddit account age
