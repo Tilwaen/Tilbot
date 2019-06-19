@@ -71,11 +71,9 @@ exports.run = async (client, message, args, level, r, unbClient) => {
 
     embed
         .addBlankField()
-        .addField(`Total`, computeStats(fwRelated.posts, fwRelated.comments, userPosts, userComments, totalScore, fwRelated, true) + `\nTotal Flairwars karma: + ${totalScore}\nDisplayed karma: ${totalKarma}`);
+        .addField(`Total`, computeStats(fwRelated.posts, fwRelated.comments, userPosts, userComments, totalScore, fwRelated, true) + `\nTotal Flairwars karma: ${totalScore}\nDisplayed karma: ${totalKarma}`);
 
     msg = await msg.edit({ embed });
-
-    //await message.channel.send("**Fetched:** Total number of posts: " + userPosts.length + ", total number of comments: " + userComments.length + ", total user post karma: " + redditUser.link_karma + ", total user comment karma: " + redditUser.comment_karma + ", total karma: " + totalScore + ".\n**Computed:** Number of FW posts: " + fwRelated.posts.length + ", number of FW comments: " + fwRelated.comments.length + ", FW post karma: " + fwRelated.postKarma + ", FW comment karma: " + fwRelated.commentKarma + "\n**Hecc u:** Pushshift computed post karma: " + userPosts.map(post => post.score).reduce((a, v) => a + v) + ", Pushshift computed comment karma: " + userComments.map(post => post.score).reduce((a, v) => a + v));
 };
 
 function getSubmissions(arrayOfPosts, subreddit) {
