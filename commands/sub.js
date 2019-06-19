@@ -56,7 +56,7 @@ exports.run = async (client, message, args, level, r, unbClient) => {
         }
     };
 
-    if (subreddit === "other") {
+    if (subreddit() === "other") {
         await message.channel.send(`**List of other Flairwars related subreddits:**\n\n${client.config.relatedSubreddits.join('\n')}`);
         return;
     }
