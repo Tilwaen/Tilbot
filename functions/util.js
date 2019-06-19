@@ -4,7 +4,6 @@ module.exports = {
         const regex = /^~\w+ /g;
         return message.content.split(regex).filter(Boolean)[0];
     },
-
     getRandomEntry: function(collection) {
         const index = Math.floor(Math.random() * collection.length);
         return collection[index];
@@ -28,10 +27,13 @@ module.exports = {
 
         return member;
     },
-    getRedditUsernameFromArg: async function(message, args) {
+    getRedditUsernameFromArg: function(args) {
         let prefixRegex = /\/?u\//;
         // Filters out the possible /u/ or u/ prefix, as well as an empty string after the split
         // Simply put, this extracts the username from the input
         return args[0].split(prefixRegex).filter(Boolean)[0];
+    },
+    roundFloat: function(number){
+        return number.toFixed(2).replace(/\.?0*$/, '');
     }
 };
