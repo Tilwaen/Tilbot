@@ -27,5 +27,11 @@ module.exports = {
         }
 
         return member;
+    },
+    getRedditUsernameFromArg: async function(message, args) {
+        let prefixRegex = /\/?u\//;
+        // Filters out the possible /u/ or u/ prefix, as well as an empty string after the split
+        // Simply put, this extracts the username from the input
+        return args[0].split(prefixRegex).filter(Boolean)[0];
     }
 };
