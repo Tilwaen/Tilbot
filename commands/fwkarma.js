@@ -39,6 +39,8 @@ exports.run = async (client, message, args, level, r, unbClient) => {
     const flairInfo = client.config.flairInfo;
     const mainPosts = getSubmissions(userPosts, 'flairwars');
     const mainComments = getSubmissions(userComments, 'flairwars');
+    const totalScore = userPosts.map(post => post.score).reduce((a, v) => a + v)
+                     + userComments.map(post => post.score).reduce((a, v) => a + v);
 
     var fwRelated = {
         "posts": [],
@@ -50,13 +52,13 @@ exports.run = async (client, message, args, level, r, unbClient) => {
     var embed = new RichEmbed()
         .setTitle("Karma of /u/" + username)
         .setColor(colourInfo.colourHex)
-        .addField(`Main subreddit`, computeStats(mainPosts, mainComments, userPosts, userComments, totalKarma, fwRelated))
+        .addField(`Main subreddit`, computeStats(mainPosts, mainComments, userPosts, userComments, totalScore, fwRelated))
         .addBlankField();
 
     client.config.colours.forEach(colour => {
         const posts = getSubmissions(userPosts, flairInfo[colour.toLowerCase()].subreddit);
         const comments = getSubmissions(userComments, flairInfo[colour.toLowerCase()].subreddit);
-        embed.addField(`${colour}`, computeStats(posts, comments, userPosts, userComments, totalKarma, fwRelated));
+        embed.addField(`${colour}`, computeStats(posts, comments, userPosts, userComments, totalScore, fwRelated));
     });
 
     const otherSubredditsPosts = userPosts.filter(post => client.config.relatedSubreddits
@@ -65,15 +67,15 @@ exports.run = async (client, message, args, level, r, unbClient) => {
     const otherSubredditsComments = userComments.filter(comment => client.config.relatedSubreddits
                                                                         .map(subreddit => subreddit.toLowerCase())
                                                                         .indexOf(comment.subreddit.toLowerCase()) > -1);
-    embed.addField(`Other related FW subreddits`, computeStats(otherSubredditsPosts, otherSubredditsComments, userPosts, userComments, totalKarma, fwRelated));
+    embed.addField(`Other related FW subreddits`, computeStats(otherSubredditsPosts, otherSubredditsComments, userPosts, userComments, totalScore, fwRelated));
 
     embed
         .addBlankField()
-        .addField(`Total`, computeStats(fwRelated.posts, fwRelated.comments, userPosts, userComments, totalKarma, fwRelated, true));
+        .addField(`Total`, computeStats(fwRelated.posts, fwRelated.comments, userPosts, userComments, totalScore, fwRelated, true) + `\nTotal Flairwars karma: + ${totalScore}\nDisplayed karma: ${totalKarma}`);
 
     msg = await msg.edit({ embed });
 
-    //msg = await msg.edit("Number of fetched posts: **" + userPosts.length + "**, number of fetched comments: **" + userComments.length + "**");
+    //await message.channel.send("**Fetched:** Total number of posts: " + userPosts.length + ", total number of comments: " + userComments.length + ", total user post karma: " + redditUser.link_karma + ", total user comment karma: " + redditUser.comment_karma + ", total karma: " + totalScore + ".\n**Computed:** Number of FW posts: " + fwRelated.posts.length + ", number of FW comments: " + fwRelated.comments.length + ", FW post karma: " + fwRelated.postKarma + ", FW comment karma: " + fwRelated.commentKarma + "\n**Hecc u:** Pushshift computed post karma: " + userPosts.map(post => post.score).reduce((a, v) => a + v) + ", Pushshift computed comment karma: " + userComments.map(post => post.score).reduce((a, v) => a + v));
 };
 
 function getSubmissions(arrayOfPosts, subreddit) {
