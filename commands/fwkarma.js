@@ -77,7 +77,8 @@ function getKarma(arrayOfPosts) {
 };
 
 function getPerc(value, totalValue) {
-    return `${util.roundFloat(value / totalValue * 100)}`;
+    const value = util.roundFloat(value / totalValue * 100);
+    return value > 10 ? `**${value}**` : `value`;
 };
 
 function computeStats(posts, comments, userPosts, userComments, totalKarma, fwRelated, final) {
