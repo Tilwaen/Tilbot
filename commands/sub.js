@@ -48,10 +48,18 @@ exports.run = async (client, message, args, level, r, unbClient) => {
             case "ssr":
             case "sixsidedrainbow":
                 return `SixSidedRainbow`;
+            case "other":
+            case "related":
+                return "other";
             default:
                 return;
         }
     };
+
+    if (subreddit === "other") {
+        await message.channel.send(`**List of other Flairwars related subreddits:**\n\n${client.config.relatedSubreddits.join('\n')}`);
+        return;
+    }
 
     if (!subreddit()) {
         await message.channel.send(`Wrong syntax. The syntax is \`${client.config.defaultSettings.prefix}sub colour\``);
