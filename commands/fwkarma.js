@@ -71,7 +71,7 @@ exports.run = async (client, message, args, level, r, unbClient) => {
 
     embed
         .addBlankField()
-        .addField(`Total`, computeStats(fwRelated.posts, fwRelated.comments, userPosts, userComments, totalScore, fwRelated, true) + `\nTotal Flairwars karma: ${totalScore}\nDisplayed karma: ${totalKarma}`);
+        .addField(`Total`, computeStats(fwRelated.posts, fwRelated.comments, userPosts, userComments, totalScore, fwRelated, true) + `\nTotal FW post score: ${fwRelated.postKarma + fwRelated.commentKarma}\nTotal post score from all the Reddit posts: ${totalScore}\nDisplayed user karma (computed from the score): ${totalKarma}`);
 
     msg = await msg.edit({ embed });
 };
