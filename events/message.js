@@ -115,6 +115,22 @@ module.exports = async (client, r, unbClient, userCooldowns, globalCooldowns, au
 
     // Global cooldown
     if (cmd.conf.globalCooldown) {
+        // If it's a count command without an argument specified, don't waste the cooldown
+        if (cmd.help.name === 'count' && args.length === 0) {
+            if (message.settings.colourCategoryIDs.includes(message.channel.parentID)) {
+                // If it's launched from within a colour channel, run it with the colour as argument implicitly
+                const colourName = client.config.colours.find(colour => message.channel.parent.name.toLowerCase().includes(colour.toLowerCase()));
+                if (!colourName) {
+                    await message.channel.send("I couldn't find a colour in this colour's channel category name. This is either oil abuse or a bug. You should check it out, " + message.guild.members.get(client.config.ownerID));
+                    return;
+                }
+                args.push(colourName);
+            } else {
+                await message.channel.send("Please specify a colour");
+                return;
+            }
+        }
+
         const now = Date.now();
         const cooldownAmount = (cmd.conf.cooldownDuration) * 1000;
 
