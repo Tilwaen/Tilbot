@@ -17,7 +17,7 @@
   "author": "Tilwaen",
   "homepage": "https://www.reddit.com/r/flairwars",
   "dependencies": {
-    "axios": "^0.18.0",
+    "axios": "^0.18.1",
     "better-sqlite-pool": "^0.1.2",
     "chalk": "^2.3.0",
     "discord.js": "^11.4.2",
