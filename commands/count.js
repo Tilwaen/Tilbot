@@ -50,7 +50,7 @@ exports.run = async (client, message, args, level, r, unbClient) => {
             // let's say that they have the "None" flair
             if (!flair.flair_text) {
                 flairMap.set(author, 'None');
-                break;
+                continue;
             }
             // Unifies the seasonal flairs; for example, 'Yellow II', 'Yellow I' and 'Yellow'
             // are all compared to just 'Yellow'
