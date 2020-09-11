@@ -25,7 +25,7 @@
     "express": "^4.16.4",
     "moment": "^2.20.1",
     "moment-duration-format": "^2.2.0",
-    "node-fetch": "^2.4.0",
+    "node-fetch": "^2.6.1",
     "qs": "^6.7.0",
     "snoowrap": "^1.15.2",
     "unb-api": "^1.0.5"
